@@ -31,14 +31,8 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     
     <style>
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
+        * { -webkit-tap-highlight-color: transparent; }
+        body { overflow-x: hidden; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -48,544 +42,440 @@
             background-size: 200% 200%;
             animation: gradient 3s ease infinite;
         }
+        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .lesson-card:hover { transform: translateY(-4px); }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
-    <!-- CÓDIGO REACT DE LA APLICACIÓN -->
     <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { Volume2, Mic, Book, Trophy, MessageSquare, Brain, Award, Check, X, Globe, Flame, Medal, Crown, Sparkles, Zap, Plus, MessageCircle, Star, Rocket, Heart, TrendingUp, Users, Video, Music } = lucide;
+        const { useState, useEffect, useRef } = React;
+        const { 
+            Volume2, Mic, Book, Trophy, MessageSquare, Brain, Award, Check, X, 
+            Globe, Flame, Medal, Crown, Sparkles, Zap, Plus, MessageCircle, 
+            Star, Rocket, Heart, TrendingUp, Users, Video, Music, Settings,
+            Play, ChevronRight, Search, Menu, Filter, Info, Bell
+        } = lucide;
 
-        const App = () => {
-          const [user, setUser] = useState(null);
-          const [level, setLevel] = useState('A1');
-          const [chat, setChat] = useState(false);
-          const [msgs, setMsgs] = useState([]);
-          const [input, setInput] = useState('');
-          const [loading, setLoading] = useState(false);
-          const [score, setScore] = useState(0);
-          const [xp, setXp] = useState(0);
-          const [streak, setStreak] = useState(0);
-          const [done, setDone] = useState([]);
-          const [badges, setBadges] = useState([]);
-          const [ex, setEx] = useState(false);
-          const [ans, setAns] = useState(null);
-          const [res, setRes] = useState(null);
-          const [idx, setIdx] = useState(0);
-          const [idioms, setIdioms] = useState(false);
-          const [rec, setRec] = useState(false);
-          const [showMenu, setShowMenu] = useState(false);
-
-          const lvls = {
-            'A1': { n: 'Principiante', c: 'from-green-400 to-emerald-600', xp: 0, icon: '🌱', img: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400' },
-            'A2': { n: 'Básico', c: 'from-blue-400 to-cyan-600', xp: 500, icon: '📘', img: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400' },
-            'B1': { n: 'Intermedio', c: 'from-yellow-400 to-orange-500', xp: 1200, icon: '🎯', img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400' },
-            'B2': { n: 'Intermedio Alto', c: 'from-orange-400 to-red-500', xp: 2000, icon: '🚀', img: 'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=400' },
-            'C1': { n: 'Avanzado', c: 'from-red-400 to-pink-600', xp: 3000, icon: '👑', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400' },
-            'C2': { n: 'Maestría', c: 'from-purple-400 to-indigo-600', xp: 4500, icon: '💎', img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400' }
-          };
-
-          const lessons = {
+        // Data Management
+        const LESSONS_DATA = {
             'A1': [
-              { i: 'a1-1', t: 'Saludos', p: ['Hello!', 'My name is...', 'Nice to meet you'], v: 5, emoji: '👋', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200' },
-              { i: 'a1-2', t: 'Números', p: ['One, two, three', 'How old are you?'], v: 8, emoji: '🔢', img: 'https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?w=200' },
-              { i: 'a1-3', t: 'Colores', p: ['Red, blue, green'], v: 7, emoji: '🎨', img: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=200' },
-              { i: 'a1-4', t: 'Familia', p: ['This is my mom', 'I have a brother'], v: 6, emoji: '👨‍👩‍👧', img: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=200' },
-              { i: 'a1-5', t: 'Rutina', p: ['I wake up at 7am'], v: 10, emoji: '⏰', img: 'https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=200' },
-              { i: 'a1-6', t: 'Días', p: ['Monday, Tuesday'], v: 12, emoji: '📅', img: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200' },
-              { i: 'a1-7', t: 'Clima', p: ["It's sunny"], v: 8, emoji: '🌤️', img: 'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=200' },
-              { i: 'a1-8', t: 'Cuerpo', p: ['Head, shoulders'], v: 10, emoji: '🫱', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200' },
-              { i: 'a1-9', t: 'Ropa', p: ["I'm wearing shirt"], v: 8, emoji: '👔', img: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=200' },
-              { i: 'a1-10', t: 'Objetos', p: ['This is a table'], v: 10, emoji: '📱', img: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=200' }
+                { i: 'a1-1', t: 'Greetings & Introductions', p: ['Hello!', 'My name is...', 'Nice to meet you', 'How are you?'], v: 5, emoji: '👋', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400' },
+                { i: 'a1-2', t: 'Numbers (1-100)', p: ['One, two, three', 'Ten, twenty, thirty', 'How old are you?'], v: 10, emoji: '🔢', img: 'https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?w=400' },
+                { i: 'a1-3', t: 'Colors & Shapes', p: ['Red, blue, green', 'Circle, square, triangle'], v: 12, emoji: '🎨', img: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=400' },
+                { i: 'a1-4', t: 'Family Members', p: ['This is my mom', 'Father, brother, sister'], v: 8, emoji: '👨‍👩‍👧', img: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400' },
+                { i: 'a1-5', t: 'Daily Routine', p: ['I wake up at 7am', 'I brush my teeth', 'I go to school'], v: 10, emoji: '⏰', img: 'https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=400' },
+                { i: 'a1-6', t: 'Describing People (PDF)', p: ['Tall, short, thin', 'Friendly, kind, funny', 'He has blue eyes'], v: 15, emoji: '👤', img: 'https://images.unsplash.com/photo-1521119989659-a83eee488004?w=400' },
+                { i: 'a1-7', t: 'Days & Months', p: ['Monday to Sunday', 'January to December'], v: 19, emoji: '📅', img: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400' },
+                { i: 'a1-8', t: 'Weather & Seasons', p: ["It's sunny", "Spring, Summer, Fall, Winter"], v: 12, emoji: '🌤️', img: 'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=400' },
+                { i: 'a1-9', t: 'Body Parts', p: ['Head, shoulders, knees', 'Eyes, ears, mouth'], v: 15, emoji: '🫱', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400' },
+                { i: 'a1-10', t: 'Clothes', p: ["I'm wearing a shirt", 'Pants, dress, shoes'], v: 10, emoji: '👔', img: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=400' },
+                { i: 'a1-11', t: 'Pets & Animals', p: ['Dog, cat, bird', 'Lion, tiger, bear'], v: 20, emoji: '🐾', img: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400' },
+                { i: 'a1-12', t: 'Food & Drinks', p: ['Bread, milk, water', 'Pizza, apple, coffee'], v: 15, emoji: '🍎', img: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400' },
+                { i: 'a1-13', t: 'Emotions', p: ["I'm happy", 'Sad, angry, excited'], v: 8, emoji: '😊', img: 'https://images.unsplash.com/photo-1508921234172-b68ed335b3e6?w=400' },
+                { i: 'a1-14', t: 'Hobbies', p: ['I like singing', 'Playing games', 'Reading books'], v: 12, emoji: '🎸', img: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400' },
+                { i: 'a1-15', t: 'My House', p: ['Living room, kitchen', 'Bedroom, bathroom'], v: 10, emoji: '🏠', img: 'https://images.unsplash.com/photo-1580587767503-36b15998315e?w=400' }
             ],
             'A2': [
-              { i: 'a2-1', t: 'Compras', p: ['How much?'], v: 8, emoji: '🛒', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=200' },
-              { i: 'a2-2', t: 'Restaurante', p: ["I'd like to order"], v: 10, emoji: '🍕', img: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200' },
-              { i: 'a2-3', t: 'Transporte', p: ['I take the bus'], v: 10, emoji: '🚌', img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=200' },
-              { i: 'a2-4', t: 'Hotel', p: ["I'd like a room"], v: 8, emoji: '🏨', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200' },
-              { i: 'a2-5', t: 'Salud', p: ["I don't feel well"], v: 10, emoji: '🏥', img: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200' }
+                { i: 'a2-1', t: 'Shopping', p: ['How much is this?', 'Can I pay with card?', 'Looking for a size M'], v: 15, emoji: '🛒', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=400' },
+                { i: 'a2-2', t: 'Restaurant', p: ["I'd like a table for two", 'Can I see the menu?', 'The bill, please'], v: 15, emoji: '🍕', img: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400' },
+                { i: 'a2-3', t: 'Transport', p: ['Where is the bus stop?', 'I take the train', 'A ticket to London'], v: 12, emoji: '🚌', img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400' },
+                { i: 'a2-4', t: 'Adjectives -ed vs -ing', p: ["I am bored", "This movie is boring", "Excited vs Exciting"], v: 20, emoji: '🤯', img: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=400' },
+                { i: 'a2-5', t: 'Comparatives', p: ['Bigger than...', 'More expensive than...', 'Better and worse'], v: 15, emoji: '⚖️', img: 'https://images.unsplash.com/photo-1513135065346-a098a63a73ee?w=400' },
+                { i: 'a2-6', t: 'Health & Doctor', p: ['I have a headache', 'Take this medicine', 'Recover soon'], v: 12, emoji: '🏥', img: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=400' },
+                { i: 'a2-7', t: 'Directions', p: ['Turn left, turn right', 'Go straight ahead', 'Next to the park'], v: 10, emoji: '📍', img: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=400' },
+                { i: 'a2-8', t: 'Jobs & Work', p: ['I am a teacher', 'Engineer, nurse, pilot', 'I work in an office'], v: 15, emoji: '💼', img: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400' },
+                { i: 'a2-9', t: 'Past Experiences', p: ['Yesterday I went...', 'I saw a movie', 'She cooked dinner'], v: 12, emoji: '🕰️', img: 'https://images.unsplash.com/photo-1505673539012-ee716fdd7448?w=400' },
+                { i: 'a2-10', t: 'Future Plans', p: ["I'm going to travel", 'I will help you', 'Maybe next week'], v: 10, emoji: '🔮', img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400' },
+                { i: 'a2-11', t: 'Adverbs of Frequency', p: ['Always, usually, often', 'Sometimes, never'], v: 8, emoji: '📊', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400' },
+                { i: 'a2-12', t: 'Media & Movies', p: ['Action, comedy, drama', 'Watch the news'], v: 12, emoji: '🎬', img: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400' },
+                { i: 'a2-13', t: 'Interests', p: ["I'm interested in art", 'Fashion, sports, tech'], v: 10, emoji: '🧩', img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400' },
+                { i: 'a2-14', t: 'Hotel Check-in', p: ["I'd like a room", 'Reservation, key, lobby'], v: 12, emoji: '🏨', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' },
+                { i: 'a2-15', t: 'Giving Advice', p: ['You should...', 'Why don\'t you?', 'It\'s a good idea'], v: 8, emoji: '💡', img: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400' }
             ],
             'B1': [
-              { i: 'b1-1', t: 'Opiniones', p: ['I think that...'], v: 6, emoji: '💭', img: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=200' },
-              { i: 'b1-2', t: 'Sugerencias', p: ['How about?'], v: 5, emoji: '💡', img: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=200' },
-              { i: 'b1-3', t: 'Experiencias', p: ["I've been to"], v: 6, emoji: '🌍', img: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=200' }
+                { i: 'b1-1', t: 'Expressing Opinions', p: ['In my opinion...', 'I totally agree', 'I disagree because...'], v: 12, emoji: '💭', img: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=400' },
+                { i: 'b1-2', t: 'Making Suggestions', p: ['How about...?', 'What if we...?', 'I suggest that...'], v: 10, emoji: '💡', img: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=400' },
+                { i: 'b1-3', t: 'Travel Experiences', p: ["I've been to...", 'The most beautiful place...', 'Local customs'], v: 15, emoji: '🌍', img: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400' },
+                { i: 'b1-4', t: 'Common Collocations', p: ['Make a decision', 'Do the homework', 'Get a job'], v: 25, emoji: '🔗', img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400' },
+                { i: 'b1-5', t: 'The Environment', p: ['Global warming', 'Recycling, pollution', 'Save the planet'], v: 18, emoji: '🌿', img: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400' },
+                { i: 'b1-6', t: 'Technology Trends', p: ['Artificial Intelligence', 'Smartphones, social media'], v: 15, emoji: '🤖', img: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400' },
+                { i: 'b1-7', t: 'Dreams & Ambitions', p: ['My goal is to...', 'I hope to become...', 'Hard work'], v: 10, emoji: '🚀', img: 'https://images.unsplash.com/photo-1493612276216-ee3925520721?w=400' },
+                { i: 'b1-8', t: 'Social Life', p: ['Hanging out', 'Meeting friends', 'Go to a party'], v: 12, emoji: '👥', img: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400' },
+                { i: 'b1-9', t: 'First Conditional', p: ['If it rains, I will...', 'If you study, you pass'], v: 12, emoji: '⚡', img: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=400' },
+                { i: 'b1-10', t: 'Passive Voice', p: ['The bridge was built...', 'It is produced in...'], v: 15, emoji: '🏗️', img: 'https://images.unsplash.com/photo-1506459225024-1428097a7e18?w=400' },
+                { i: 'b1-11', t: 'Relative Clauses', p: ['The man who...', 'The place where...'], v: 10, emoji: '🔗', img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400' },
+                { i: 'b1-12', t: 'Reporting Speech', p: ['He said that...', 'She told me...'], v: 12, emoji: '🗣️', img: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=400' },
+                { i: 'b1-13', t: 'Solving Problems', p: ['What should we do?', 'I found a solution'], v: 10, emoji: '🧩', img: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400' },
+                { i: 'b1-14', t: 'Business English Intro', p: ['Let\'s start the meeting', 'Email etiquette'], v: 15, emoji: '👔', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400' },
+                { i: 'b1-15', t: 'Art & Culture', p: ['Painting, music, theater', 'Local traditions'], v: 12, emoji: '🖼️', img: 'https://images.unsplash.com/photo-1460666819451-7410f5403063?w=400' }
             ],
-            'B2': [],
-            'C1': [],
-            'C2': []
-          };
-
-          const idms = {
-            'A2': [
-              { p: "Break a leg", m: "Buena suerte", e: "Break a leg on test!", u: "🎭", img: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=200' },
-              { p: "Piece of cake", m: "Muy fácil", e: "That was piece of cake!", u: "🍰", img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200' }
-            ],
-            'B1': [
-              { p: "Under the weather", m: "Sentirse mal", e: "I'm under weather", u: "🤒", img: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=200' },
-              { p: "Spill the beans", m: "Revelar secreto", e: "Spill the beans!", u: "🤫", img: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=200' }
-            ],
-            'B2': [],
-            'C1': [],
-            'C2': []
-          };
-
-          const exs = [
-            { q: '¿Saludo mañana?', o: ['Good morning', 'Good night', 'Afternoon', 'Bye'], a: 0, l: 'A1', x: 20 },
-            { q: '"Piece of cake"?', o: ['Postre', 'Fácil', 'Difícil', 'Fiesta'], a: 1, l: 'A2', x: 30 }
-          ];
-
-          useEffect(() => { if (user) load(); }, [user]);
-          useEffect(() => { if (user) save(); }, [score, xp, done, user]);
-
-          const load = async () => {
-            try {
-              const stored = localStorage.getItem(`progress_${user.email}`);
-              if (stored) {
-                const d = JSON.parse(stored);
-                setScore(d.s || 0); setXp(d.x || 0); setStreak(d.st || 0);
-                setLevel(d.l || 'A1'); setDone(d.d || []); setBadges(d.b || []);
-              }
-            } catch (e) { console.log('No previous data'); }
-          };
-
-          const save = () => {
-            if (!user) return;
-            try {
-              localStorage.setItem(`progress_${user.email}`, JSON.stringify({
-                s: score, x: xp, st: streak, l: level, d: done, b: badges
-              }));
-            } catch (e) { console.error('Save error:', e); }
-          };
-
-          const speak = (t) => {
-            if ('speechSynthesis' in window) {
-              window.speechSynthesis.cancel();
-              const u = new SpeechSynthesisUtterance(t);
-              u.lang = 'en-US';
-              u.rate = 0.9;
-              window.speechSynthesis.speak(u);
-            }
-          };
-
-          const voice = () => {
-            if (!('webkitSpeechRecognition' in window)) { alert('Usa Chrome para reconocimiento de voz'); return; }
-            const r = new webkitSpeechRecognition();
-            r.lang = 'en-US';
-            r.onstart = () => setRec(true);
-            r.onend = () => setRec(false);
-            r.onresult = (e) => {
-              const t = e.results[0][0].transcript;
-              setInput(t);
-              setXp(xp + 10);
-              alert(`🎤 Escuché: "${t}"`);
-            };
-            r.start();
-          };
-
-          const complete = (i) => {
-            if (!done.includes(i)) {
-              setDone([...done, i]);
-              setScore(score + 50);
-              setXp(xp + 50);
-            }
-          };
-
-          const check = (i) => {
-            setAns(i);
-            const levelExs = exs.filter(x => x.l === level);
-            const e = levelExs[idx % levelExs.length];
-            if (e && i === e.a) {
-              setRes('ok');
-              setScore(score + 20);
-              setXp(xp + e.x);
-              setTimeout(() => { setRes(null); setAns(null); setIdx(idx + 1); }, 2000);
-            } else {
-              setRes('no');
-              setTimeout(() => { setRes(null); setAns(null); }, 2000);
-            }
-          };
-
-          const startChat = () => {
-            setChat(true);
-            const m = { role: 'assistant', content: `Hi ${user?.name || ''}! I'm your AI tutor. Let's practice! Say: "Hello, my name is..."` };
-            setMsgs([m]);
-            speak(m.content);
-          };
-
-          const send = async () => {
-            if (!input.trim()) return;
-            const nm = [...msgs, { role: 'user', content: input }];
-            setMsgs(nm);
-            setInput('');
-            setLoading(true);
-            try {
-              const r = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  model: 'claude-sonnet-4-20250514',
-                  max_tokens: 1000,
-                  messages: [{ role: 'user', content: `American English tutor for ${level}. Student said: "${input}". Respond naturally in 2-3 sentences, correct gently.` }]
-                })
-              });
-              const d = await r.json();
-              const ai = d.content[0].text;
-              setMsgs([...nm, { role: 'assistant', content: ai }]);
-              speak(ai);
-              setScore(score + 10);
-              setXp(xp + 10);
-            } catch (e) {
-              setMsgs([...nm, { role: 'assistant', content: "Connection error. Try again!" }]);
-            }
-            setLoading(false);
-          };
-
-          const login = () => {
-            const u = {
-              email: prompt('Tu email:') || 'demo@test.com',
-              name: prompt('Tu nombre:') || 'Demo User',
-              picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + Math.random()
-            };
-            if (u.email) setUser(u);
-          };
-
-          if (!user) {
-            return (
-              <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center p-4 relative overflow-hidden">
-                <div className="absolute inset-0 overflow-hidden">
-                  <div className="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl animate-pulse"></div>
-                  <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-                </div>
-
-                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 max-w-md w-full border border-white/20">
-                  <div className="text-center mb-8">
-                    <div className="relative inline-block mb-6">
-                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                      <div className="relative bg-white p-6 rounded-full">
-                        <Brain className="text-purple-600" size={64} />
-                      </div>
-                    </div>
-                    <h1 className="text-5xl md:text-6xl font-black text-white mb-3 drop-shadow-lg">
-                      AI English
-                      <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">Academy</span>
-                    </h1>
-                    <p className="text-white/90 text-lg font-medium">Aprende inglés americano con IA 🚀</p>
-                  </div>
-                  
-                  <button onClick={login} className="w-full bg-gradient-to-r from-white to-gray-100 text-gray-800 py-5 rounded-2xl font-bold text-lg mb-6 hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
-                    <Globe size={28} />
-                    Comenzar Gratis
-                  </button>
-                  
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="bg-gradient-to-br from-green-400 to-emerald-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
-                      <Book className="text-white mx-auto mb-2" size={32} />
-                      <p className="text-xs font-bold text-white">60+ Lecciones</p>
-                    </div>
-                    <div className="bg-gradient-to-br from-blue-400 to-cyan-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
-                      <MessageCircle className="text-white mx-auto mb-2" size={32} />
-                      <p className="text-xs font-bold text-white">IA Ilimitada</p>
-                    </div>
-                    <div className="bg-gradient-to-br from-purple-400 to-pink-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
-                      <Mic className="text-white mx-auto mb-2" size={32} />
-                      <p className="text-xs font-bold text-white">Voz Real</p>
-                    </div>
-                    <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
-                      <Trophy className="text-white mx-auto mb-2" size={32} />
-                      <p className="text-xs font-bold text-white">Certificados</p>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm p-5 rounded-2xl border border-yellow-300/30">
-                    <p className="text-center font-bold text-white mb-3 flex items-center justify-center gap-2">
-                      <Sparkles size={20} />
-                      100% Gratis vs Competencia
-                    </p>
-                    <div className="text-sm text-white/90 space-y-2">
-                      <p>❌ Duolingo Max: <span className="line-through">$360/año</span></p>
-                      <p>❌ Babbel: <span className="line-through">$144/año</span></p>
-                      <p className="text-yellow-300 font-bold text-lg">✅ Esta app: $0 GRATIS 🎉</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-center gap-2 text-white/70 text-xs">
-                    <Heart size={14} className="text-red-400" />
-                    <span>Hecho con amor para estudiantes como tú</span>
-                  </div>
-                </div>
-              </div>
-            );
-          }
-
-          const ls = lessons[level] || [];
-          const ids = idms[level] || [];
-
-          return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-2xl sticky top-0 z-40">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl">
-                        <Brain size={32} />
-                      </div>
-                      <div>
-                        <h1 className="text-2xl font-black">AI English</h1>
-                        <p className="text-xs text-white/80">{lvls[level].n} • {xp} XP</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="hidden md:flex gap-3">
-                        <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2">
-                          <Trophy size={18} />
-                          <span className="font-bold">{score}</span>
-                        </div>
-                        <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2">
-                          <Flame size={18} />
-                          <span className="font-bold">{streak}</span>
-                        </div>
-                      </div>
-                      
-                      <button onClick={() => setShowMenu(!showMenu)} className="bg-white/20 backdrop-blur-sm p-3 rounded-xl hover:bg-white/30 transition">
-                        <img src={user.picture} alt="" className="w-8 h-8 rounded-full" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="max-w-7xl mx-auto p-4 pb-24 md:pb-4">
-                {/* Levels */}
-                <div className="mb-6">
-                  <h2 className="text-2xl font-black text-gray-800 mb-4 flex items-center gap-2">
-                    <Rocket className="text-purple-600" />
-                    Elige tu Nivel
-                  </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {Object.entries(lvls).map(([k, v]) => (
-                      <button
-                        key={k}
-                        onClick={() => setLevel(k)}
-                        className={`group relative overflow-hidden rounded-3xl transition-all duration-300 ${level === k ? 'scale-105 shadow-2xl' : 'hover:scale-102 shadow-lg'}`}
-                      >
-                        <div className="absolute inset-0">
-                          <img src={v.img} alt={v.n} className="w-full h-full object-cover opacity-40" />
-                          <div className={`absolute inset-0 bg-gradient-to-br ${v.c} ${level === k ? 'opacity-90' : 'opacity-70'}`}></div>
-                        </div>
-                        <div className="relative p-6 text-white">
-                          <div className="text-4xl mb-2">{v.icon}</div>
-                          <div className="font-black text-2xl mb-1">{k}</div>
-                          <div className="text-sm font-semibold opacity-90">{v.n}</div>
-                          {level === k && <Crown className="absolute top-2 right-2" size={20} />}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-                  <button onClick={startChat} className="relative group bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
-                    <MessageSquare className="mx-auto mb-2" size={32} />
-                    <p className="font-bold text-sm">Conversar IA</p>
-                  </button>
-                  
-                  <button onClick={() => setEx(true)} className="relative group bg-gradient-to-br from-purple-500 to-pink-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
-                    <Trophy className="mx-auto mb-2" size={32} />
-                    <p className="font-bold text-sm">Ejercicios</p>
-                  </button>
-                  
-                  <button onClick={voice} className={`relative group bg-gradient-to-br from-red-500 to-pink-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl ${rec ? 'animate-pulse' : ''}`}>
-                    <Mic className="mx-auto mb-2" size={32} />
-                    <p className="font-bold text-sm">{rec ? 'Grabando...' : 'Pronunciar'}</p>
-                  </button>
-                  
-                  <button onClick={() => setIdioms(true)} className="relative group bg-gradient-to-br from-yellow-500 to-orange-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
-                    <MessageCircle className="mx-auto mb-2" size={32} />
-                    <p className="font-bold text-sm">Modismos</p>
-                  </button>
-                  
-                  <button className="relative group bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
-                    <Video className="mx-auto mb-2" size={32} />
-                    <p className="font-bold text-sm">Videos</p>
-                  </button>
-                </div>
-
-                {/* Lessons */}
-                <div className="mb-6">
-                  <h2 className="text-2xl font-black text-gray-800 mb-4 flex items-center gap-2">
-                    <Book className="text-blue-600" />
-                    Lecciones ({ls.length})
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {ls.map((l) => (
-                      <div key={l.i} className={`group relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-105 ${done.includes(l.i) ? 'bg-gradient-to-br from-green-100 to-emerald-100 border-2 border-green-400 shadow-xl' : 'bg-white shadow-lg hover:shadow-2xl'}`}>
-                        <div className="absolute top-0 right-0 left-0 h-24 overflow-hidden rounded-t-3xl">
-                          <img src={l.img} alt={l.t} className="w-full h-full object-cover opacity-60" />
-                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white"></div>
-                        </div>
-                        
-                        <div className="relative p-6 pt-20">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <div className="text-3xl">{l.emoji}</div>
-                              <h3 className="font-black text-lg text-gray-800">{l.t}</h3>
-                            </div>
-                            {done.includes(l.i) && <div className="bg-green-500 text-white p-2 rounded-full"><Check size={16} /></div>}
-                          </div>
-                          
-                          <div className="space-y-2 mb-4">
-                            {l.p.slice(0, 2).map((ph, i) => (
-                              <div key={i} className="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-xl flex items-center justify-between">
-                                <span className="text-sm text-gray-700">{ph}</span>
-                                <button onClick={() => speak(ph)} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition">
-                                  <Volume2 size={14} />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-                            <span>{l.v} palabras</span>
-                            <span className="flex items-center gap-1"><Star size={12} className="text-yellow-500" />+50 XP</span>
-                          </div>
-                          
-                          {!done.includes(l.i) && (
-                            <button onClick={() => complete(l.i)} className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-xl font-bold transition-all hover:scale-105">
-                              Completar Lección
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Progress */}
-                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-3xl p-6 text-white shadow-2xl">
-                  <div className="flex items-center justify-between flex-wrap gap-4">
-                    <div>
-                      <h3 className="text-2xl font-black mb-2 flex items-center gap-2"><Sparkles />Tu Progreso</h3>
-                      <p className="text-white/90">{done.length} de {ls.length} lecciones completadas</p>
-                    </div>
-                    <div className="flex gap-6">
-                      <div className="text-center">
-                        <Trophy className="mx-auto mb-1" size={32} />
-                        <p className="text-3xl font-black">{score}</p>
-                        <p className="text-xs">Puntos</p>
-                      </div>
-                      <div className="text-center">
-                        <Zap className="mx-auto mb-1" size={32} />
-                        <p className="text-3xl font-black">{xp}</p>
-                        <p className="text-xs">XP Total</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4 bg-white/20 rounded-full h-4 overflow-hidden">
-                    <div className="bg-white h-full rounded-full transition-all" style={{width: `${ls.length > 0 ? (done.length / ls.length) * 100 : 0}%`}}></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Chat Modal */}
-              {chat && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                  <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-                    <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-3xl">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-2xl font-black">Tutor IA</h3>
-                        <button onClick={() => setChat(false)} className="bg-white/20 hover:bg-white/30 p-2 rounded-xl transition"><X /></button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white">
-                      {msgs.map((m, i) => (
-                        <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user' ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white' : 'bg-white shadow-lg'}`}>
-                            <p>{m.content}</p>
-                            {m.role === 'assistant' && (
-                              <button onClick={() => speak(m.content)} className="mt-2 text-blue-600 text-sm flex items-center gap-1"><Volume2 size={16} /> Escuchar</button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                      {loading && (
-                        <div className="flex justify-start">
-                          <div className="bg-white shadow-lg p-4 rounded-2xl">
-                            <div className="flex gap-2">
-                              <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
-                              <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                              <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="p-4 border-t bg-gray-50 rounded-b-3xl">
-                      <div className="flex gap-2">
-                        <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && send()} placeholder="Escribe en inglés..." className="flex-1 p-4 border-2 border-gray-300 rounded-2xl focus:border-blue-500 focus:outline-none" />
-                        <button onClick={send} disabled={loading || !input.trim()} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 text-white px-6 py-4 rounded-2xl font-bold transition">Enviar</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Menu Modal */}
-              {showMenu && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-4">
-                  <div className="bg-white rounded-t-3xl md:rounded-3xl w-full max-w-md p-6">
-                    <div className="flex items-center gap-4 mb-6">
-                      <img src={user.picture} alt="" className="w-16 h-16 rounded-full" />
-                      <div>
-                        <p className="font-bold text-lg">{user.name}</p>
-                        <p className="text-sm text-gray-500">{user.email}</p>
-                      </div>
-                    </div>
-                    
-                    <button onClick={() => { setUser(null); setShowMenu(false); }} className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white p-4 rounded-2xl font-bold hover:from-red-600 hover:to-pink-700 transition mb-3">
-                      Cerrar Sesión
-                    </button>
-                    
-                    <button onClick={() => setShowMenu(false)} className="w-full bg-gray-100 text-gray-700 p-4 rounded-2xl font-bold hover:bg-gray-200 transition">
-                      Cerrar
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
+            'B2': [
+                { i: 'b2-1', t: 'Business Negotiations', p: ['I am prepared to offer...', 'We have a deal', 'Terms and conditions'], v: 20, emoji: '🤝', img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400' },
+                { i: 'b2-2', t: 'Global Economy', p: ['Inflation rate', 'Market fluctuations', 'Trade balance'], v: 18, emoji: '📈', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400' },
+                { i: 'b2-3', t: 'Advanced Slang', p: ["That's lit!", "Bail on someone", "No cap"], v: 25, emoji: '🔥', img: 'https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=400' },
+                { i: 'b2-4', t: 'Persuasive Writing', p: ['Convincing arguments', 'Structure of an essay'], v: 15, emoji: '📝', img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400' },
+                { i: 'b2-5', t: 'Debating Skills', p: ['Counter-arguments', 'Logical fallacies'], v: 12, emoji: '⚖️', img: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400' },
+                { i: 'b2-6', t: 'Critical Thinking', p: ['Analyzing sources', 'Bias identification'], v: 10, emoji: '🧠', img: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400' },
+                { i: 'b2-7', t: 'Abstract Concepts', p: ['Freedom, justice, ethics', 'Philosophy basics'], v: 15, emoji: '🌌', img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400' },
+                { i: 'b2-8', t: 'Speculating', p: ['Might have been', 'Should have known'], v: 12, emoji: '🔮', img: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400' },
+                { i: 'b2-9', t: 'Nuance in Speech', p: ['Tone and register', 'Polite vs Blunt'], v: 10, emoji: '🎭', img: 'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=400' },
+                { i: 'b2-10', t: 'Literature Analysis', p: ['Themes, metaphors', 'Character arcs'], v: 15, emoji: '📖', img: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400' },
+                { i: 'b2-11', t: 'Sociology & Society', p: ['Cultural norms', 'Social structure'], v: 12, emoji: '🏘️', img: 'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=400' },
+                { i: 'b2-12', t: 'Psychology Basics', p: ['Behavioral patterns', 'Mental wellness'], v: 15, emoji: '🧬', img: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400' },
+                { i: 'b2-13', t: 'History & Heritage', p: ['Civilizations', 'Key events'], v: 12, emoji: '🏺', img: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=400' },
+                { i: 'b2-14', t: 'Future of Humanity', p: ['Space exploration', 'Singularity'], v: 10, emoji: '🛸', img: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400' },
+                { i: 'b2-15', t: 'Capstone Project', p: ['Final presentation', 'Synthesis of skills'], v: 20, emoji: '🎓', img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400' }
+            ]
         };
 
-        // Render App
-        ReactDOM.render(<App />, document.getElementById('root'));
+        const IDIOMS_DATA = {
+            'A2': [
+                { p: "Break a leg", m: "Buena suerte", e: "Break a leg on the test!", u: "🎭", img: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=200' },
+                { p: "Piece of cake", m: "Muy fácil", e: "That was a piece of cake!", u: "🍰", img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200' },
+                { p: "Hit the sack", m: "Ir a dormir", e: "I'm tired, time to hit the sack!", u: "😴", img: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=200' },
+                { p: "Couch potato", m: "Persona perezosa", e: "Don't be a couch potato!", u: "🥔", img: 'https://images.unsplash.com/photo-1512054502232-10a0a035d672?w=200' }
+            ],
+            'B1': [
+                { p: "Under the weather", m: "Sentirse mal", e: "I'm feeling a bit under the weather today.", u: "🤒", img: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=200' },
+                { p: "Spill the beans", m: "Revelar un secreto", e: "Come on, spill the beans!", u: "🤫", img: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=200' },
+                { p: "Break the ice", m: "Romper el hielo", e: "He told a joke to break the ice.", u: "🧊", img: 'https://images.unsplash.com/photo-1518118014377-ce94f3e6967e?w=200' },
+                { p: "Cost an arm and a leg", m: "Muy costoso", e: "That car costs an arm and a leg!", u: "💰", img: 'https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?w=200' }
+            ],
+            'B2': [
+                { p: "Barking up the wrong tree", m: "Estar equivocado", e: "If you think I did it, you're barking up the wrong tree.", u: "🌳", img: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=200' },
+                { p: "Ballpark figure", m: "Cifra aproximada", e: "Can you give me a ballpark figure for the budget?", u: "🏟️", img: 'https://images.unsplash.com/photo-1508344928928-7165b67de128?w=200' },
+                { p: "Bite the bullet", m: "Aceptar algo difícil", e: "I decided to bite the bullet and quit.", u: "🔫", img: 'https://images.unsplash.com/photo-1514336020557-e54f92bc311d?w=400' }
+            ]
+        };
 
-        // Initialize Lucide Icons
-        setTimeout(() => lucide.createIcons(), 100);
-    </script>
+        const EXERCISES_DATA = [
+            { q: '¿Cuál es el saludo formal por la mañana?', o: ['Good morning', 'Good night', 'Afternoon', 'Bye'], a: 0, l: 'A1', x: 20 },
+            { q: 'What does "Piece of cake" mean?', o: ['A dessert', 'Very easy', 'Very hard', 'A party'], a: 1, l: 'A2', x: 30 },
+            { q: 'Complete: "I am ______ in learning English."', o: ['interesting', 'interested', 'interest', 'interess'], a: 1, l: 'A2', x: 40 },
+            { q: 'If it rains, I ______ at home.', o: ['stay', 'will stay', 'stayed', 'would stay'], a: 1, l: 'B1', x: 50 },
+            { q: 'Meaning of "Barking up the wrong tree"?', o: ['Chasing a cat', 'Wrong approach', 'Planting a tree', 'Dog training'], a: 1, l: 'B2', x: 60 }
+        ];
 
-    <!-- Service Worker Registration -->
-    <script>
+        const VIDEOS_DATA = [
+            { t: 'Grammar Rock: Adjectives', id: 'mYzGLzFuwxI', l: 'A1' },
+            { t: 'Describing People - Lesson', id: 'mYzGLzFuwxI', l: 'A2' },
+            { t: 'American Idioms Explained', id: 'mYzGLzFuwxI', l: 'B1' }
+        ];
+
+        const App = () => {
+            const [user, setUser] = useState(null);
+            const [level, setLevel] = useState('A1');
+            const [currentView, setCurrentView] = useState('home');
+            const [doneLessons, setDoneLessons] = useState([]);
+            const [xp, setXp] = useState(0);
+            const [streak, setStreak] = useState(0);
+            const [msgs, setMsgs] = useState([]);
+            const [input, setInput] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [apiKey, setApiKey] = useState(localStorage.getItem('claude_api_key') || '');
+            const [showMenu, setShowMenu] = useState(false);
+            const [currentLesson, setCurrentLesson] = useState(null);
+            const [exerciseIdx, setExerciseIdx] = useState(0);
+            const [answer, setAnswer] = useState(null);
+            const [result, setResult] = useState(null);
+
+            const scrollRef = useRef(null);
+
+            // Persistence
+            useEffect(() => {
+                const stored = localStorage.getItem('ai_academy_user');
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    setUser(data.user);
+                    setDoneLessons(data.done || []);
+                    setXp(data.xp || 0);
+                    setStreak(data.streak || 0);
+                    setLevel(data.level || 'A1');
+                }
+            }, []);
+
+            useEffect(() => {
+                if (user) {
+                    localStorage.setItem('ai_academy_user', JSON.stringify({
+                        user, done: doneLessons, xp, streak, level
+                    }));
+                }
+            }, [doneLessons, xp, streak, level, user]);
+
+            useEffect(() => {
+                if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            }, [msgs]);
+
+            const speak = (text) => {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'en-US';
+                    u.rate = 0.9;
+                    window.speechSynthesis.speak(u);
+                }
+            };
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                const name = e.target.name.value;
+                if (!name) return;
+                setUser({ name, email: 'user@example.com', picture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}` });
+            };
+
+            const completeLesson = (id) => {
+                if (!doneLessons.includes(id)) {
+                    setDoneLessons([...doneLessons, id]);
+                    setXp(xp + 100);
+                    setStreak(streak + 1);
+                }
+                setCurrentView('home');
+                setCurrentLesson(null);
+            };
+
+            const sendChat = async () => {
+                if (!input.trim()) return;
+                const newMsgs = [...msgs, { role: 'user', content: input }];
+                setMsgs(newMsgs);
+                setInput('');
+                setLoading(true);
+
+                if (!apiKey) {
+                    setTimeout(() => {
+                        const aiMsg = { role: 'assistant', content: "Simulated AI: I'd love to chat! Please add your Anthropic API Key in Settings to enable real conversations." };
+                        setMsgs([...newMsgs, aiMsg]);
+                        speak(aiMsg.content);
+                        setLoading(false);
+                    }, 1000);
+                    return;
+                }
+
+                try {
+                    const res = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+                        body: JSON.stringify({
+                            model: 'claude-3-haiku-20240307',
+                            max_tokens: 1024,
+                            messages: [{ role: 'user', content: `You are a helpful American English tutor. Level: ${level}. Respond to: "${input}"` }]
+                        })
+                    });
+                    const data = await res.json();
+                    const aiContent = data.content[0].text;
+                    setMsgs([...newMsgs, { role: 'assistant', content: aiContent }]);
+                    speak(aiContent);
+                } catch (e) {
+                    setMsgs([...newMsgs, { role: 'assistant', content: "Error connecting to AI. Check your API key." }]);
+                }
+                setLoading(false);
+            };
+
+            // Rendering Components
+            if (!user) {
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center p-4">
+                        <div className="glass rounded-3xl p-10 max-w-md w-full text-white shadow-2xl">
+                            <div className="text-center mb-8">
+                                <div className="bg-white p-6 rounded-full inline-block mb-4 shadow-xl">
+                                    <Brain size={64} className="text-purple-600" />
+                                </div>
+                                <h1 className="text-4xl font-black mb-2">AI Academy</h1>
+                                <p className="text-white/80">Domina el inglés americano gratis</p>
+                            </div>
+                            <form onSubmit={handleLogin} className="space-y-4">
+                                <input name="name" type="text" placeholder="Ingresa tu nombre" className="w-full p-4 rounded-2xl bg-white/20 border border-white/30 text-white placeholder-white/60 outline-none focus:bg-white/30 transition" required />
+                                <button type="submit" className="w-full bg-white text-indigo-600 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition active:scale-95 shadow-lg">Comenzar Ahora</button>
+                            </form>
+                            <div className="mt-8 grid grid-cols-2 gap-3 text-center text-xs opacity-90">
+                                <div className="p-3 bg-white/10 rounded-xl"><Trophy className="mx-auto mb-1" /> 60+ Lecciones</div>
+                                <div className="p-3 bg-white/10 rounded-xl"><Globe className="mx-auto mb-1" /> IA Ilimitada</div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen bg-slate-50 pb-20 md:pb-0">
+                    {/* Navbar */}
+                    <nav className="bg-indigo-600 text-white p-4 sticky top-0 z-50 shadow-lg">
+                        <div className="max-w-7xl mx-auto flex items-center justify-between">
+                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('home')}>
+                                <Brain size={32} />
+                                <div>
+                                    <h2 className="font-black text-xl leading-none">AI Academy</h2>
+                                    <span className="text-[10px] opacity-80 uppercase tracking-widest">{level} Mastery</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="hidden sm:flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full text-sm font-bold">
+                                    <Zap size={14} className="text-yellow-300" /> {xp} XP
+                                </div>
+                                <div className="flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full text-sm font-bold">
+                                    <Flame size={14} className="text-orange-400" /> {streak}
+                                </div>
+                                <button onClick={() => setShowMenu(true)} className="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden">
+                                    <img src={user.picture} alt="" />
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <main className="max-w-7xl mx-auto p-4">
+                        {currentView === 'home' && (
+                            <div className="space-y-8 animate-fade-in">
+                                {/* Level Selector */}
+                                <section>
+                                    <h3 className="text-xl font-black mb-4 flex items-center gap-2 text-slate-800">
+                                        <Medal className="text-indigo-600" /> Selecciona tu Nivel
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                        {['A1', 'A2', 'B1', 'B2'].map(l => (
+                                            <button key={l} onClick={() => setLevel(l)} 
+                                                className={`p-4 rounded-2xl font-black text-2xl transition-all border-2 ${level === l ? 'bg-indigo-600 text-white border-indigo-600 scale-105 shadow-xl' : 'bg-white text-slate-400 border-slate-200 hover:border-indigo-300'}`}>
+                                                {l}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                {/* Main Actions */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <button onClick={() => setCurrentView('chat')} className="p-6 rounded-3xl bg-emerald-500 text-white shadow-lg hover:scale-105 transition flex flex-col items-center gap-2">
+                                        <MessageSquare size={32} /> <span className="font-bold">Chat IA</span>
+                                    </button>
+                                    <button onClick={() => setCurrentView('exercises')} className="p-6 rounded-3xl bg-purple-500 text-white shadow-lg hover:scale-105 transition flex flex-col items-center gap-2">
+                                        <Award size={32} /> <span className="font-bold">Ejercicios</span>
+                                    </button>
+                                    <button onClick={() => setCurrentView('idioms')} className="p-6 rounded-3xl bg-orange-500 text-white shadow-lg hover:scale-105 transition flex flex-col items-center gap-2">
+                                        <Sparkles size={32} /> <span className="font-bold">Modismos</span>
+                                    </button>
+                                    <button onClick={() => setCurrentView('videos')} className="p-6 rounded-3xl bg-blue-500 text-white shadow-lg hover:scale-105 transition flex flex-col items-center gap-2">
+                                        <Video size={32} /> <span className="font-bold">Clases</span>
+                                    </button>
+                                </div>
+
+                                {/* Lessons Grid */}
+                                <section>
+                                    <h3 className="text-xl font-black mb-4 text-slate-800">Lecciones {level}</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {LESSONS_DATA[level].map(l => (
+                                            <div key={l.i} onClick={() => { setCurrentLesson(l); setCurrentView('lesson'); }} 
+                                                className={`lesson-card glass bg-white p-5 rounded-3xl shadow-sm cursor-pointer transition-all border-2 ${doneLessons.includes(l.i) ? 'border-green-400 bg-green-50' : 'border-transparent'}`}>
+                                                <div className="h-40 rounded-2xl overflow-hidden mb-4 relative">
+                                                    <img src={l.img} className="w-full h-full object-cover" alt="" />
+                                                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur p-2 rounded-xl text-2xl shadow-lg">{l.emoji}</div>
+                                                </div>
+                                                <h4 className="font-black text-lg mb-2 text-slate-800">{l.t}</h4>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-xs text-slate-500 font-bold">{l.v} frases clave</span>
+                                                    {doneLessons.includes(l.i) ? <Check className="text-green-500" /> : <ChevronRight className="text-slate-300" />}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                            </div>
+                        )}
+
+                        {currentView === 'lesson' && currentLesson && (
+                            <div className="max-w-2xl mx-auto space-y-6 animate-slide-up">
+                                <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 text-indigo-600 font-bold"><ChevronRight className="rotate-180" /> Volver</button>
+                                <div className="bg-white rounded-3xl p-8 shadow-2xl border border-slate-100">
+                                    <div className="text-center mb-8">
+                                        <span className="text-6xl mb-4 block">{currentLesson.emoji}</span>
+                                        <h2 className="text-3xl font-black text-slate-800">{currentLesson.t}</h2>
+                                    </div>
+                                    <div className="space-y-4">
+                                        {currentLesson.p.map((phrase, idx) => (
+                                            <div key={idx} className="group p-4 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-between hover:bg-indigo-100 transition">
+                                                <p className="font-bold text-lg text-slate-700">{phrase}</p>
+                                                <button onClick={() => speak(phrase)} className="p-3 bg-white rounded-xl text-indigo-600 shadow-md group-hover:scale-110 transition"><Volume2 /></button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button onClick={() => completeLesson(currentLesson.i)} 
+                                        className="w-full mt-10 bg-indigo-600 text-white py-4 rounded-2xl font-black text-xl shadow-xl hover:scale-105 active:scale-95 transition">
+                                        Completar Lección +100 XP
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {currentView === 'chat' && (
+                            <div className="fixed inset-0 bg-slate-50 z-[60] flex flex-col md:relative md:bg-transparent md:inset-auto md:h-[600px]">
+                                <header className="bg-white border-b p-4 flex items-center justify-between md:rounded-t-3xl shadow-sm">
+                                    <button onClick={() => setCurrentView('home')} className="text-indigo-600"><ChevronRight className="rotate-180" /></button>
+                                    <h2 className="font-black text-lg">Chat IA con Claude</h2>
+                                    <button onClick={() => setMsgs([])} className="text-slate-400"><Trash size={18}/></button>
+                                </header>
+                                <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+                                    {msgs.length === 0 && (
+                                        <div className="text-center text-slate-400 py-20">
+                                            <Brain className="mx-auto mb-4 opacity-20" size={64} />
+                                            <p className="font-bold">¡Hola! Soy tu tutor personal.</p>
+                                            <p className="text-sm">Escribe cualquier cosa para practicar.</p>
+                                        </div>
+                                    )}
+                                    {msgs.map((m, i) => (
+                                        <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                            <div className={`max-w-[85%] p-4 rounded-2xl shadow-sm ${m.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-slate-800 rounded-tl-none'}`}>
+                                                <p className="text-sm md:text-base leading-relaxed">{m.content}</p>
+                                                {m.role === 'assistant' && (
+                                                    <button onClick={() => speak(m.content)} className="mt-2 text-indigo-400 flex items-center gap-1 text-[10px] font-bold uppercase"><Volume2 size={12}/> Escuchar</button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {loading && <div className="text-slate-400 flex gap-1 animate-pulse"><div className="w-2 h-2 bg-indigo-400 rounded-full"></div><div className="w-2 h-2 bg-indigo-400 rounded-full"></div><div className="w-2 h-2 bg-indigo-400 rounded-full"></div></div>}
+                                </div>
+                                <footer className="p-4 bg-white border-t md:rounded-b-3xl">
+                                    <div className="flex gap-2">
+                                        <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && sendChat()} placeholder="Escribe en inglés..." className="flex-1 p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 ring-indigo-500" />
+                                        <button onClick={sendChat} className="bg-indigo-600 text-white p-4 rounded-2xl hover:bg-indigo-700 transition"><MessageSquare /></button>
+                                    </div>
+                                </footer>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Modals */}
+                    {showMenu && (
+                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+                            <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden animate-scale-up">
+                                <div className="p-8 text-center bg-indigo-50">
+                                    <img src={user.picture} className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white shadow-lg" alt="" />
+                                    <h3 className="text-2xl font-black text-slate-800">{user.name}</h3>
+                                    <p className="text-indigo-600 font-bold">{xp} XP • {level} Level</p>
+                                </div>
+                                <div className="p-6 space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Anthropic API Key</label>
+                                        <input type="password" value={apiKey} onChange={(e) => { setApiKey(e.target.value); localStorage.setItem('claude_api_key', e.target.value); }} className="w-full p-3 bg-slate-100 rounded-xl outline-none border border-slate-200 focus:border-indigo-500" placeholder="sk-ant-..." />
+                                        <p className="text-[10px] text-slate-400 text-center">Tus llaves se guardan localmente en tu dispositivo.</p>
+                                    </div>
+                                    <div className="pt-4 grid grid-cols-2 gap-3">
+                                        <button onClick={() => setUser(null)} className="p-4 rounded-2xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200">Salir</button>
+                                        <button onClick={() => setShowMenu(false)} className="p-4 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        
+        // SW & PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('✅ Service Worker registered'))
-                    .catch(err => console.log('❌ SW error:', err));
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
             });
         }
-
-        // Install prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            console.log('💾 App can be installed');
-        });
     </script>
 </body>
 </html>
