@@ -2,289 +2,590 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI English Academy - 60+ Lecciones de Inglés</title>
-    <meta name="description" content="Aprende inglés americano gratis con IA. 60+ lecciones, seguimiento de progreso y práctica interactiva.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI English Academy - Aprende Inglés Americano con IA</title>
+    <meta name="description" content="Aprende inglés americano gratis con inteligencia artificial. 60+ lecciones, conversaciones con IA, modismos, ejercicios y más.">
+    
+    <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#4F46E5">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI English">
     <link rel="manifest" href="./manifest.json">
+    
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧠%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧠%3C/text%3E%3C/svg%3E">
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
     <style>
-        * { -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        .lesson-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .lesson-card:hover { transform: translateY(-4px); }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-gradient {
+            background-size: 200% 200%;
+            animation: gradient 3s ease infinite;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <div id="root"></div>
+
+    <!-- CÓDIGO REACT DE LA APLICACIÓN -->
     <script type="text/babel">
         const { useState, useEffect } = React;
+        const { Volume2, Mic, Book, Trophy, MessageSquare, Brain, Award, Check, X, Globe, Flame, Medal, Crown, Sparkles, Zap, Plus, MessageCircle, Star, Rocket, Heart, TrendingUp, Users, Video, Music } = lucide;
 
         const App = () => {
-            const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('ai_user')) || null);
-            const [currentView, setCurrentView] = useState(user ? 'dashboard' : 'login');
-            const [score, setScore] = useState(() => parseInt(localStorage.getItem('ai_score')) || 0);
-            const [completedLessons, setCompletedLessons] = useState(() => JSON.parse(localStorage.getItem('ai_completed')) || []);
-            const [messages, setMessages] = useState([]);
-            const [input, setInput] = useState('');
-            const [selectedLesson, setSelectedLesson] = useState(null);
+          const [user, setUser] = useState(null);
+          const [level, setLevel] = useState('A1');
+          const [chat, setChat] = useState(false);
+          const [msgs, setMsgs] = useState([]);
+          const [input, setInput] = useState('');
+          const [loading, setLoading] = useState(false);
+          const [score, setScore] = useState(0);
+          const [xp, setXp] = useState(0);
+          const [streak, setStreak] = useState(0);
+          const [done, setDone] = useState([]);
+          const [badges, setBadges] = useState([]);
+          const [ex, setEx] = useState(false);
+          const [ans, setAns] = useState(null);
+          const [res, setRes] = useState(null);
+          const [idx, setIdx] = useState(0);
+          const [idioms, setIdioms] = useState(false);
+          const [rec, setRec] = useState(false);
+          const [showMenu, setShowMenu] = useState(false);
 
-            useEffect(() => {
-                if (user) localStorage.setItem('ai_user', JSON.stringify(user));
-                localStorage.setItem('ai_score', score.toString());
-                localStorage.setItem('ai_completed', JSON.stringify(completedLessons));
-            }, [user, score, completedLessons]);
+          const lvls = {
+            'A1': { n: 'Principiante', c: 'from-green-400 to-emerald-600', xp: 0, icon: '🌱', img: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400' },
+            'A2': { n: 'Básico', c: 'from-blue-400 to-cyan-600', xp: 500, icon: '📘', img: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400' },
+            'B1': { n: 'Intermedio', c: 'from-yellow-400 to-orange-500', xp: 1200, icon: '🎯', img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400' },
+            'B2': { n: 'Intermedio Alto', c: 'from-orange-400 to-red-500', xp: 2000, icon: '🚀', img: 'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=400' },
+            'C1': { n: 'Avanzado', c: 'from-red-400 to-pink-600', xp: 3000, icon: '👑', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400' },
+            'C2': { n: 'Maestría', c: 'from-purple-400 to-indigo-600', xp: 4500, icon: '💎', img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400' }
+          };
 
-            const LESSON_CATEGORIES = {
-                'A1': 'Básico 1',
-                'A2': 'Básico 2',
-                'B1': 'Intermedio 1',
-                'B2': 'Intermedio 2'
+          const lessons = {
+            'A1': [
+              { i: 'a1-1', t: 'Saludos', p: ['Hello!', 'My name is...', 'Nice to meet you'], v: 5, emoji: '👋', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200' },
+              { i: 'a1-2', t: 'Números', p: ['One, two, three', 'How old are you?'], v: 8, emoji: '🔢', img: 'https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?w=200' },
+              { i: 'a1-3', t: 'Colores', p: ['Red, blue, green'], v: 7, emoji: '🎨', img: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=200' },
+              { i: 'a1-4', t: 'Familia', p: ['This is my mom', 'I have a brother'], v: 6, emoji: '👨‍👩‍👧', img: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=200' },
+              { i: 'a1-5', t: 'Rutina', p: ['I wake up at 7am'], v: 10, emoji: '⏰', img: 'https://images.unsplash.com/photo-1495364141860-b0d03eccd065?w=200' },
+              { i: 'a1-6', t: 'Días', p: ['Monday, Tuesday'], v: 12, emoji: '📅', img: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=200' },
+              { i: 'a1-7', t: 'Clima', p: ["It's sunny"], v: 8, emoji: '🌤️', img: 'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=200' },
+              { i: 'a1-8', t: 'Cuerpo', p: ['Head, shoulders'], v: 10, emoji: '🫱', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200' },
+              { i: 'a1-9', t: 'Ropa', p: ["I'm wearing shirt"], v: 8, emoji: '👔', img: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=200' },
+              { i: 'a1-10', t: 'Objetos', p: ['This is a table'], v: 10, emoji: '📱', img: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=200' }
+            ],
+            'A2': [
+              { i: 'a2-1', t: 'Compras', p: ['How much?'], v: 8, emoji: '🛒', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=200' },
+              { i: 'a2-2', t: 'Restaurante', p: ["I'd like to order"], v: 10, emoji: '🍕', img: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200' },
+              { i: 'a2-3', t: 'Transporte', p: ['I take the bus'], v: 10, emoji: '🚌', img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=200' },
+              { i: 'a2-4', t: 'Hotel', p: ["I'd like a room"], v: 8, emoji: '🏨', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200' },
+              { i: 'a2-5', t: 'Salud', p: ["I don't feel well"], v: 10, emoji: '🏥', img: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200' }
+            ],
+            'B1': [
+              { i: 'b1-1', t: 'Opiniones', p: ['I think that...'], v: 6, emoji: '💭', img: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=200' },
+              { i: 'b1-2', t: 'Sugerencias', p: ['How about?'], v: 5, emoji: '💡', img: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=200' },
+              { i: 'b1-3', t: 'Experiencias', p: ["I've been to"], v: 6, emoji: '🌍', img: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=200' }
+            ],
+            'B2': [],
+            'C1': [],
+            'C2': []
+          };
+
+          const idms = {
+            'A2': [
+              { p: "Break a leg", m: "Buena suerte", e: "Break a leg on test!", u: "🎭", img: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=200' },
+              { p: "Piece of cake", m: "Muy fácil", e: "That was piece of cake!", u: "🍰", img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200' }
+            ],
+            'B1': [
+              { p: "Under the weather", m: "Sentirse mal", e: "I'm under weather", u: "🤒", img: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=200' },
+              { p: "Spill the beans", m: "Revelar secreto", e: "Spill the beans!", u: "🤫", img: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=200' }
+            ],
+            'B2': [],
+            'C1': [],
+            'C2': []
+          };
+
+          const exs = [
+            { q: '¿Saludo mañana?', o: ['Good morning', 'Good night', 'Afternoon', 'Bye'], a: 0, l: 'A1', x: 20 },
+            { q: '"Piece of cake"?', o: ['Postre', 'Fácil', 'Difícil', 'Fiesta'], a: 1, l: 'A2', x: 30 }
+          ];
+
+          useEffect(() => { if (user) load(); }, [user]);
+          useEffect(() => { if (user) save(); }, [score, xp, done, user]);
+
+          const load = async () => {
+            try {
+              const stored = localStorage.getItem(`progress_${user.email}`);
+              if (stored) {
+                const d = JSON.parse(stored);
+                setScore(d.s || 0); setXp(d.x || 0); setStreak(d.st || 0);
+                setLevel(d.l || 'A1'); setDone(d.d || []); setBadges(d.b || []);
+              }
+            } catch (e) { console.log('No previous data'); }
+          };
+
+          const save = () => {
+            if (!user) return;
+            try {
+              localStorage.setItem(`progress_${user.email}`, JSON.stringify({
+                s: score, x: xp, st: streak, l: level, d: done, b: badges
+              }));
+            } catch (e) { console.error('Save error:', e); }
+          };
+
+          const speak = (t) => {
+            if ('speechSynthesis' in window) {
+              window.speechSynthesis.cancel();
+              const u = new SpeechSynthesisUtterance(t);
+              u.lang = 'en-US';
+              u.rate = 0.9;
+              window.speechSynthesis.speak(u);
+            }
+          };
+
+          const voice = () => {
+            if (!('webkitSpeechRecognition' in window)) { alert('Usa Chrome para reconocimiento de voz'); return; }
+            const r = new webkitSpeechRecognition();
+            r.lang = 'en-US';
+            r.onstart = () => setRec(true);
+            r.onend = () => setRec(false);
+            r.onresult = (e) => {
+              const t = e.results[0][0].transcript;
+              setInput(t);
+              setXp(xp + 10);
+              alert(`🎤 Escuché: "${t}"`);
             };
+            r.start();
+          };
 
-            // Generador de lecciones para llegar a 60+
-            const generateLessons = () => {
-                const baseLessons = [
-                    { id: 1, level: 'A1', title: 'Saludos y Presentaciones', desc: 'Hello, Hi, Nice to meet you', content: 'Greeting people is the first step...' },
-                    { id: 2, level: 'A1', title: 'El Alfabeto y Deletreo', desc: 'A-B-C and how to spell', content: 'Learn the sounds of each letter...' },
-                    { id: 3, level: 'A1', title: 'Los Números (1-100)', desc: 'Counting in English', content: 'One, two, three... ten, twenty...' },
-                    { id: 4, level: 'A1', title: 'Colores y Objetos', desc: 'The red car, the blue sky', content: 'Adjectives come before nouns...' },
-                    { id: 5, level: 'A1', title: 'Días y Meses', desc: 'Monday, January...', content: 'Learn the calendar vocabulary...' },
-                    { id: 6, level: 'A1', title: 'Mi Familia', desc: 'Mother, father, sister', content: 'Describing your relatives...' },
-                    { id: 7, level: 'A1', title: 'Partes del Cuerpo', desc: 'Head, shoulders, knees', content: 'Anatomy basics in English...' },
-                    { id: 8, level: 'A1', title: 'Ropa y Estilo', desc: 'What are you wearing?', content: 'Shirt, pants, shoes...' },
-                    { id: 9, level: 'A1', title: 'La Casa', desc: 'Kitchen, bedroom, garden', content: 'Furniture and rooms...' },
-                    { id: 10, level: 'A1', title: 'Comida y Bebida', desc: 'Bread, water, coffee', content: 'Basic food items...' },
-                    { id: 11, level: 'A1', title: 'Transporte', desc: 'Bus, car, train, plane', content: 'Getting around the city...' },
-                    { id: 12, level: 'A1', title: 'Animales', desc: 'Dog, cat, lion, bird', content: 'Pets and wild animals...' },
-                    { id: 13, level: 'A1', title: 'El Clima', desc: 'Sunny, rainy, snowy', content: 'Describing the weather...' },
-                    { id: 14, level: 'A1', title: 'Profesiones', desc: 'Doctor, teacher, pilot', content: 'What do you do for a living?' },
-                    { id: 15, level: 'A1', title: 'Actividades Diarias', desc: 'Wake up, eat, sleep', content: 'Routine verbs...' },
-                    
-                    { id: 16, level: 'A2', title: 'Pasado Simple: Verbo To Be', desc: 'I was, you were', content: 'Expressing history...' },
-                    { id: 17, level: 'A2', title: 'Pasado Simple: Regulares', desc: 'Worked, played, lived', content: 'Past actions...' },
-                    { id: 18, level: 'A2', title: 'Irregulares Comunes', desc: 'Went, ate, saw', content: 'The exceptions to the rule...' },
-                    { id: 19, level: 'A2', title: 'Comparativos', desc: 'Bigger than, better than', content: 'Comparing things...' },
-                    { id: 20, level: 'A2', title: 'Superlativos', desc: 'The biggest, the best', content: 'The extreme level...' },
-                    { id: 21, level: 'A2', title: 'Can y Could', desc: 'Abilities and requests', content: 'I can play the piano...' },
-                    { id: 22, level: 'A2', title: 'Have to y Must', desc: 'Obligations', content: 'You must study...' },
-                    { id: 23, level: 'A2', title: 'Direcciones', desc: 'Go straight, turn left', content: 'Asking for the way...' },
-                    { id: 24, level: 'A2', title: 'Salud y Medicina', desc: 'Headache, doctor, pills', content: 'At the clinic...' },
-                    { id: 25, level: 'A2', title: 'Compras y Dinero', desc: 'How much is it?', content: 'At the store...' },
-                    { id: 26, level: 'A2', title: 'Viajes y Turismo', desc: 'Passport, hotel, flight', content: 'Vacation vocabulary...' },
-                    { id: 27, level: 'A2', title: 'Adverbios de Frecuencia', desc: 'Always, never, often', content: 'How often you do things...' },
-                    { id: 28, level: 'A2', title: 'Presente Continuo', desc: 'I am reading', content: 'Actions now...' },
-                    { id: 29, level: 'A2', title: 'Futuro: Will', desc: 'Predictions and promises', content: 'I will go there...' },
-                    { id: 30, level: 'A2', title: 'Futuro: Going to', desc: 'Plans and intentions', content: 'I am going to study...' },
+          const complete = (i) => {
+            if (!done.includes(i)) {
+              setDone([...done, i]);
+              setScore(score + 50);
+              setXp(xp + 50);
+            }
+          };
 
-                    { id: 31, level: 'B1', title: 'Presente Perfecto', desc: 'I have seen that movie', content: 'Life experiences...' },
-                    { id: 32, level: 'B1', title: 'Since y For', desc: 'Duration of time', content: 'I have lived here for 10 years...' },
-                    { id: 33, level: 'B1', title: 'Pasado Continuo', desc: 'I was sleeping when...', content: 'Parallel actions...' },
-                    { id: 34, level: 'B1', title: 'Primer Condicional', desc: 'If it rains, I will stay', content: 'Probabilities...' },
-                    { id: 35, level: 'B1', title: 'Segundo Condicional', desc: 'If I won the lottery...', content: 'Imaginary situations...' },
-                    { id: 36, level: 'B1', title: 'Voz Pasiva (Presente)', desc: 'Coffee is grown in...', content: 'Focusing on the object...' },
-                    { id: 37, level: 'B1', title: 'Reported Speech', desc: 'She said she was tired', content: 'Reporting what people say...' },
-                    { id: 38, level: 'B1', title: 'Used to', desc: 'Past habits', content: 'I used to play soccer...' },
-                    { id: 39, level: 'B1', title: 'Relative Clauses', desc: 'The man who lives there', content: 'Adding information...' },
-                    { id: 40, level: 'B1', title: 'Modal Verbs (Advice)', desc: 'Should, ought to', content: 'Giving suggestions...' },
-                    { id: 41, level: 'B1', title: 'Medio Ambiente', desc: 'Pollution, recycling', content: 'Saving the planet...' },
-                    { id: 42, level: 'B1', title: 'Cultura y Tradiciones', desc: 'Holidays, customs', content: 'Around the world...' },
-                    { id: 43, level: 'B1', title: 'Tecnología Moderna', desc: 'AI, Internet, Apps', content: 'Digital world vocabulary...' },
-                    { id: 44, level: 'B1', title: 'El Trabajo', desc: 'Resume, interview, boss', content: 'Professional life...' },
-                    { id: 45, level: 'B1', title: 'Entretenimiento', desc: 'Movies, music, theater', content: 'Leisure activities...' },
+          const check = (i) => {
+            setAns(i);
+            const levelExs = exs.filter(x => x.l === level);
+            const e = levelExs[idx % levelExs.length];
+            if (e && i === e.a) {
+              setRes('ok');
+              setScore(score + 20);
+              setXp(xp + e.x);
+              setTimeout(() => { setRes(null); setAns(null); setIdx(idx + 1); }, 2000);
+            } else {
+              setRes('no');
+              setTimeout(() => { setRes(null); setAns(null); }, 2000);
+            }
+          };
 
-                    { id: 46, level: 'B2', title: 'Voz Pasiva (Pasado)', desc: 'The pyramids were built...', content: 'Advanced history...' },
-                    { id: 47, level: 'B2', title: 'Tercer Condicional', desc: 'If I had studied harder...', content: 'Regrets about the past...' },
-                    { id: 48, level: 'B2', title: 'Phrasal Verbs 1', desc: 'Get up, give up, look for', content: 'Idiomatic expressions...' },
-                    { id: 49, level: 'B2', title: 'Phrasal Verbs 2', desc: 'Run out, take off, put on', content: 'More phrasal verbs...' },
-                    { id: 50, level: 'B2', title: 'Gerunds vs Infinitives', desc: 'Stop to talk / Stop talking', content: 'Complex verb patterns...' },
-                    { id: 51, level: 'B2', title: 'Wish y If Only', desc: 'Expressing desires', content: 'Hypothetical situations...' },
-                    { id: 52, level: 'B2', title: 'Pasado Perfecto', desc: 'I had already eaten', content: 'Past before past...' },
-                    { id: 53, level: 'B2', title: 'Causative Have/Get', desc: 'I had my hair cut', content: 'Services by others...' },
-                    { id: 54, level: 'B2', title: 'Modal Verbs (Deduction)', desc: 'Must be, can\'t be, might', content: 'Drawing conclusions...' },
-                    { id: 55, level: 'B2', title: 'Advanced Adjectives', desc: 'Exhausted, tiny, huge', content: 'Expanding vocabulary...' },
-                    { id: 56, level: 'B2', title: 'Business English', desc: 'Meetings, negotiations', content: 'Professional communication...' },
-                    { id: 57, level: 'B2', title: 'Debates y Opiniones', desc: 'In my opinion, however...', content: 'Argumentative structures...' },
-                    { id: 58, level: 'B2', title: 'Expresiones Idiomáticas', desc: 'Piece of cake, break a leg', content: 'Real English idioms...' },
-                    { id: 59, level: 'B2', title: 'Presentaciones', desc: 'How to present in English', content: 'Structure and transitions...' },
-                    { id: 60, level: 'B2', title: 'Escritura Avanzada', desc: 'Essays, formal emails', content: 'Professional writing...' }
-                ];
-                return baseLessons;
+          const startChat = () => {
+            setChat(true);
+            const m = { role: 'assistant', content: `Hi ${user?.name || ''}! I'm your AI tutor. Let's practice! Say: "Hello, my name is..."` };
+            setMsgs([m]);
+            speak(m.content);
+          };
+
+          const send = async () => {
+            if (!input.trim()) return;
+            const nm = [...msgs, { role: 'user', content: input }];
+            setMsgs(nm);
+            setInput('');
+            setLoading(true);
+            try {
+              const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  model: 'claude-sonnet-4-20250514',
+                  max_tokens: 1000,
+                  messages: [{ role: 'user', content: `American English tutor for ${level}. Student said: "${input}". Respond naturally in 2-3 sentences, correct gently.` }]
+                })
+              });
+              const d = await r.json();
+              const ai = d.content[0].text;
+              setMsgs([...nm, { role: 'assistant', content: ai }]);
+              speak(ai);
+              setScore(score + 10);
+              setXp(xp + 10);
+            } catch (e) {
+              setMsgs([...nm, { role: 'assistant', content: "Connection error. Try again!" }]);
+            }
+            setLoading(false);
+          };
+
+          const login = () => {
+            const u = {
+              email: prompt('Tu email:') || 'demo@test.com',
+              name: prompt('Tu nombre:') || 'Demo User',
+              picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + Math.random()
             };
+            if (u.email) setUser(u);
+          };
 
-            const allLessons = generateLessons();
-
-            const handleLogin = (name) => {
-                const newUser = { name, id: Date.now() };
-                setUser(newUser);
-                setCurrentView('dashboard');
-            };
-
-            const logout = () => {
-                setUser(null);
-                setScore(0);
-                setCompletedLessons([]);
-                localStorage.clear();
-                setCurrentView('login');
-            };
-
-            const startLesson = (lesson) => {
-                setSelectedLesson(lesson);
-                setMessages([{ type: 'ai', text: `Welcome to "${lesson.title}"! Let's practice. Level: ${lesson.level}` }]);
-                setCurrentView('lesson');
-            };
-
-            const handleSendMessage = () => {
-                if (!input.trim()) return;
-                const newMsgs = [...messages, { type: 'user', text: input }];
-                setMessages(newMsgs);
-                setInput('');
-                
-                // Simulación de IA y progreso
-                setTimeout(() => {
-                    const aiResponse = { type: 'ai', text: 'Correct! You are doing great. Keep going! 🌟' };
-                    setMessages([...newMsgs, aiResponse]);
-                    setScore(prev => prev + 25);
-                    
-                    if (!completedLessons.includes(selectedLesson.id)) {
-                        setCompletedLessons([...completedLessons, selectedLesson.id]);
-                    }
-                }, 600);
-            };
-
+          if (!user) {
             return (
-                <div className="min-h-screen">
-                    {/* Header */}
-                    {user && (
-                        <header className="glass fixed top-0 w-full z-50 border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-indigo-600 text-white p-2 rounded-lg font-bold">AI</div>
-                                <h1 className="font-bold text-xl text-gray-800">English Academy</h1>
-                            </div>
-                            <div className="flex items-center gap-6">
-                                <div className="text-right hidden sm:block">
-                                    <p className="font-bold text-indigo-600">{score} XP</p>
-                                    <p className="text-xs text-gray-400">{completedLessons.length} lecciones completadas</p>
-                                </div>
-                                <button onClick={logout} className="text-gray-400 hover:text-red-500 transition">Salir</button>
-                            </div>
-                        </header>
-                    )}
-
-                    {/* Login View */}
-                    {currentView === 'login' && (
-                        <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-indigo-600 to-purple-700">
-                            <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-                                <h2 className="text-3xl font-bold text-center mb-2 text-indigo-600">Bienvenido</h2>
-                                <p className="text-gray-500 text-center mb-8">Comienza tu viaje hacia el bilingüismo</p>
-                                <input
-                                    type="text"
-                                    placeholder="Ingresa tu nombre"
-                                    className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl mb-4 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin(e.target.value)}
-                                />
-                                <button onClick={(e) => handleLogin(document.querySelector('input').value)} className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg transition">
-                                    Empezar Ahora
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Dashboard View */}
-                    {currentView === 'dashboard' && (
-                        <main className="pt-24 pb-12 px-6 max-w-7xl mx-auto">
-                            <section className="mb-12 text-center py-12">
-                                <h2 className="text-4xl font-bold text-gray-800 mb-4">Tu progreso en Inglés</h2>
-                                <div className="max-w-md mx-auto bg-gray-200 h-4 rounded-full overflow-hidden">
-                                    <div className="bg-indigo-600 h-full transition-all duration-1000" style={{width: `${(completedLessons.length / allLessons.length) * 100}%`}}></div>
-                                </div>
-                                <p className="mt-4 text-gray-500">{completedLessons.length} de {allLessons.length} lecciones aprendidas</p>
-                            </section>
-
-                            {Object.keys(LESSON_CATEGORIES).map(lvl => (
-                                <div key={lvl} className="mb-12">
-                                    <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-                                        <span className="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full text-sm">{lvl}</span>
-                                        {LESSON_CATEGORIES[lvl]}
-                                    </h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                        {allLessons.filter(l => l.level === lvl).map(lesson => (
-                                            <div key={lesson.id} 
-                                                className={`lesson-card p-6 rounded-2xl border-2 cursor-pointer ${completedLessons.includes(lesson.id) ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white shadow-sm'}`}
-                                                onClick={() => startLesson(lesson)}>
-                                                <div className="flex justify-between items-start mb-4">
-                                                    <div className={`p-2 rounded-lg ${completedLessons.includes(lesson.id) ? 'bg-green-100 text-green-600' : 'bg-indigo-50 text-indigo-600'}`}>
-                                                        {completedLessons.includes(lesson.id) ? '✓' : '📖'}
-                                                    </div>
-                                                    <span className="text-xs font-bold text-gray-400">ID: #{lesson.id}</span>
-                                                </div>
-                                                <h4 className="font-bold text-lg mb-2 text-gray-800">{lesson.title}</h4>
-                                                <p className="text-sm text-gray-500 mb-4">{lesson.desc}</p>
-                                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider">
-                                                    <span className={completedLessons.includes(lesson.id) ? 'text-green-600' : 'text-indigo-600'}>
-                                                        {completedLessons.includes(lesson.id) ? 'Completada' : 'Empezar'}
-                                                    </span>
-                                                    <span className="text-gray-300">10-15 Min</span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </main>
-                    )}
-
-                    {/* Lesson View */}
-                    {currentView === 'lesson' && (selectedLesson && (
-                        <main className="pt-24 pb-12 px-6 max-w-4xl mx-auto flex flex-col h-[calc(100vh-96px)]">
-                            <div className="flex justify-between items-center mb-6">
-                                <button onClick={() => setCurrentView('dashboard')} className="text-indigo-600 font-bold flex items-center gap-2">← Volver al Panel</button>
-                                <h2 className="font-bold text-gray-800">{selectedLesson.title}</h2>
-                                <div className="w-10"></div>
-                            </div>
-
-                            <div className="flex-1 glass border border-gray-200 rounded-3xl p-6 mb-4 overflow-y-auto shadow-sm">
-                                {messages.map((m, i) => (
-                                    <div key={i} className={`mb-6 flex ${m.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`max-w-[80%] p-4 rounded-2xl ${m.type === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-gray-100 text-gray-800 rounded-tl-none'}`}>
-                                            <p className="text-sm leading-relaxed">{m.text}</p>
-                                        </div>
-                                    </div>
-                                ))}- Expanded lesson database to 60 structured units
-- Levels covered: A1 (Beginner), A2 (Elementary), B1 (Intermediate), B2 (Upper Intermediate)
-- Implemented localStorage persistence for user name, score, and completed lessons
-- Added progress bar tracking total completion percentage
-- Improved UI with "glassmorphism" header and better lesson cards
-- Each lesson now awards 25 XP and marks as completed
-- Added login/logout functionality with data retention
-- Responsive design for mobile and desktop usage
-                            </div>
-
-                            <div className="flex gap-4 items-center glass p-4 rounded-2xl border border-gray-200">
-                                <input
-                                    type="text"
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                                    placeholder="Responde en inglés..."
-                                    className="flex-1 bg-transparent border-none focus:outline-none px-4 py-2"
-                                />
-                                <button onClick={handleSendMessage} className="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition">
-                                    <svg className="w-6 h-6 rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
-                                </button>
-                            </div>
-                        </main>
-                    ))}
+              <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center p-4 relative overflow-hidden">
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl animate-pulse"></div>
+                  <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
                 </div>
+
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 max-w-md w-full border border-white/20">
+                  <div className="text-center mb-8">
+                    <div className="relative inline-block mb-6">
+                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                      <div className="relative bg-white p-6 rounded-full">
+                        <Brain className="text-purple-600" size={64} />
+                      </div>
+                    </div>
+                    <h1 className="text-5xl md:text-6xl font-black text-white mb-3 drop-shadow-lg">
+                      AI English
+                      <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">Academy</span>
+                    </h1>
+                    <p className="text-white/90 text-lg font-medium">Aprende inglés americano con IA 🚀</p>
+                  </div>
+                  
+                  <button onClick={login} className="w-full bg-gradient-to-r from-white to-gray-100 text-gray-800 py-5 rounded-2xl font-bold text-lg mb-6 hover:scale-105 transition-transform shadow-2xl flex items-center justify-center gap-3">
+                    <Globe size={28} />
+                    Comenzar Gratis
+                  </button>
+                  
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="bg-gradient-to-br from-green-400 to-emerald-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
+                      <Book className="text-white mx-auto mb-2" size={32} />
+                      <p className="text-xs font-bold text-white">60+ Lecciones</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-blue-400 to-cyan-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
+                      <MessageCircle className="text-white mx-auto mb-2" size={32} />
+                      <p className="text-xs font-bold text-white">IA Ilimitada</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-400 to-pink-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
+                      <Mic className="text-white mx-auto mb-2" size={32} />
+                      <p className="text-xs font-bold text-white">Voz Real</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-2xl text-center transform hover:scale-105 transition-transform">
+                      <Trophy className="text-white mx-auto mb-2" size={32} />
+                      <p className="text-xs font-bold text-white">Certificados</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm p-5 rounded-2xl border border-yellow-300/30">
+                    <p className="text-center font-bold text-white mb-3 flex items-center justify-center gap-2">
+                      <Sparkles size={20} />
+                      100% Gratis vs Competencia
+                    </p>
+                    <div className="text-sm text-white/90 space-y-2">
+                      <p>❌ Duolingo Max: <span className="line-through">$360/año</span></p>
+                      <p>❌ Babbel: <span className="line-through">$144/año</span></p>
+                      <p className="text-yellow-300 font-bold text-lg">✅ Esta app: $0 GRATIS 🎉</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex items-center justify-center gap-2 text-white/70 text-xs">
+                    <Heart size={14} className="text-red-400" />
+                    <span>Hecho con amor para estudiantes como tú</span>
+                  </div>
+                </div>
+              </div>
             );
+          }
+
+          const ls = lessons[level] || [];
+          const ids = idms[level] || [];
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-2xl sticky top-0 z-40">
+                <div className="max-w-7xl mx-auto px-4 py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl">
+                        <Brain size={32} />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-black">AI English</h1>
+                        <p className="text-xs text-white/80">{lvls[level].n} • {xp} XP</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="hidden md:flex gap-3">
+                        <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2">
+                          <Trophy size={18} />
+                          <span className="font-bold">{score}</span>
+                        </div>
+                        <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2">
+                          <Flame size={18} />
+                          <span className="font-bold">{streak}</span>
+                        </div>
+                      </div>
+                      
+                      <button onClick={() => setShowMenu(!showMenu)} className="bg-white/20 backdrop-blur-sm p-3 rounded-xl hover:bg-white/30 transition">
+                        <img src={user.picture} alt="" className="w-8 h-8 rounded-full" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="max-w-7xl mx-auto p-4 pb-24 md:pb-4">
+                {/* Levels */}
+                <div className="mb-6">
+                  <h2 className="text-2xl font-black text-gray-800 mb-4 flex items-center gap-2">
+                    <Rocket className="text-purple-600" />
+                    Elige tu Nivel
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {Object.entries(lvls).map(([k, v]) => (
+                      <button
+                        key={k}
+                        onClick={() => setLevel(k)}
+                        className={`group relative overflow-hidden rounded-3xl transition-all duration-300 ${level === k ? 'scale-105 shadow-2xl' : 'hover:scale-102 shadow-lg'}`}
+                      >
+                        <div className="absolute inset-0">
+                          <img src={v.img} alt={v.n} className="w-full h-full object-cover opacity-40" />
+                          <div className={`absolute inset-0 bg-gradient-to-br ${v.c} ${level === k ? 'opacity-90' : 'opacity-70'}`}></div>
+                        </div>
+                        <div className="relative p-6 text-white">
+                          <div className="text-4xl mb-2">{v.icon}</div>
+                          <div className="font-black text-2xl mb-1">{k}</div>
+                          <div className="text-sm font-semibold opacity-90">{v.n}</div>
+                          {level === k && <Crown className="absolute top-2 right-2" size={20} />}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                  <button onClick={startChat} className="relative group bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
+                    <MessageSquare className="mx-auto mb-2" size={32} />
+                    <p className="font-bold text-sm">Conversar IA</p>
+                  </button>
+                  
+                  <button onClick={() => setEx(true)} className="relative group bg-gradient-to-br from-purple-500 to-pink-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
+                    <Trophy className="mx-auto mb-2" size={32} />
+                    <p className="font-bold text-sm">Ejercicios</p>
+                  </button>
+                  
+                  <button onClick={voice} className={`relative group bg-gradient-to-br from-red-500 to-pink-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl ${rec ? 'animate-pulse' : ''}`}>
+                    <Mic className="mx-auto mb-2" size={32} />
+                    <p className="font-bold text-sm">{rec ? 'Grabando...' : 'Pronunciar'}</p>
+                  </button>
+                  
+                  <button onClick={() => setIdioms(true)} className="relative group bg-gradient-to-br from-yellow-500 to-orange-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
+                    <MessageCircle className="mx-auto mb-2" size={32} />
+                    <p className="font-bold text-sm">Modismos</p>
+                  </button>
+                  
+                  <button className="relative group bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 rounded-3xl hover:scale-105 transition-transform shadow-xl">
+                    <Video className="mx-auto mb-2" size={32} />
+                    <p className="font-bold text-sm">Videos</p>
+                  </button>
+                </div>
+
+                {/* Lessons */}
+                <div className="mb-6">
+                  <h2 className="text-2xl font-black text-gray-800 mb-4 flex items-center gap-2">
+                    <Book className="text-blue-600" />
+                    Lecciones ({ls.length})
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {ls.map((l) => (
+                      <div key={l.i} className={`group relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-105 ${done.includes(l.i) ? 'bg-gradient-to-br from-green-100 to-emerald-100 border-2 border-green-400 shadow-xl' : 'bg-white shadow-lg hover:shadow-2xl'}`}>
+                        <div className="absolute top-0 right-0 left-0 h-24 overflow-hidden rounded-t-3xl">
+                          <img src={l.img} alt={l.t} className="w-full h-full object-cover opacity-60" />
+                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white"></div>
+                        </div>
+                        
+                        <div className="relative p-6 pt-20">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <div className="text-3xl">{l.emoji}</div>
+                              <h3 className="font-black text-lg text-gray-800">{l.t}</h3>
+                            </div>
+                            {done.includes(l.i) && <div className="bg-green-500 text-white p-2 rounded-full"><Check size={16} /></div>}
+                          </div>
+                          
+                          <div className="space-y-2 mb-4">
+                            {l.p.slice(0, 2).map((ph, i) => (
+                              <div key={i} className="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-xl flex items-center justify-between">
+                                <span className="text-sm text-gray-700">{ph}</span>
+                                <button onClick={() => speak(ph)} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition">
+                                  <Volume2 size={14} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                            <span>{l.v} palabras</span>
+                            <span className="flex items-center gap-1"><Star size={12} className="text-yellow-500" />+50 XP</span>
+                          </div>
+                          
+                          {!done.includes(l.i) && (
+                            <button onClick={() => complete(l.i)} className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-xl font-bold transition-all hover:scale-105">
+                              Completar Lección
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Progress */}
+                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-3xl p-6 text-white shadow-2xl">
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <h3 className="text-2xl font-black mb-2 flex items-center gap-2"><Sparkles />Tu Progreso</h3>
+                      <p className="text-white/90">{done.length} de {ls.length} lecciones completadas</p>
+                    </div>
+                    <div className="flex gap-6">
+                      <div className="text-center">
+                        <Trophy className="mx-auto mb-1" size={32} />
+                        <p className="text-3xl font-black">{score}</p>
+                        <p className="text-xs">Puntos</p>
+                      </div>
+                      <div className="text-center">
+                        <Zap className="mx-auto mb-1" size={32} />
+                        <p className="text-3xl font-black">{xp}</p>
+                        <p className="text-xs">XP Total</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 bg-white/20 rounded-full h-4 overflow-hidden">
+                    <div className="bg-white h-full rounded-full transition-all" style={{width: `${ls.length > 0 ? (done.length / ls.length) * 100 : 0}%`}}></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Chat Modal */}
+              {chat && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                  <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+                    <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-3xl">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-black">Tutor IA</h3>
+                        <button onClick={() => setChat(false)} className="bg-white/20 hover:bg-white/30 p-2 rounded-xl transition"><X /></button>
+                      </div>
+                    </div>
+                    
+                    <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white">
+                      {msgs.map((m, i) => (
+                        <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user' ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white' : 'bg-white shadow-lg'}`}>
+                            <p>{m.content}</p>
+                            {m.role === 'assistant' && (
+                              <button onClick={() => speak(m.content)} className="mt-2 text-blue-600 text-sm flex items-center gap-1"><Volume2 size={16} /> Escuchar</button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      {loading && (
+                        <div className="flex justify-start">
+                          <div className="bg-white shadow-lg p-4 rounded-2xl">
+                            <div className="flex gap-2">
+                              <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
+                              <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                              <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="p-4 border-t bg-gray-50 rounded-b-3xl">
+                      <div className="flex gap-2">
+                        <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && send()} placeholder="Escribe en inglés..." className="flex-1 p-4 border-2 border-gray-300 rounded-2xl focus:border-blue-500 focus:outline-none" />
+                        <button onClick={send} disabled={loading || !input.trim()} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 text-white px-6 py-4 rounded-2xl font-bold transition">Enviar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Menu Modal */}
+              {showMenu && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-4">
+                  <div className="bg-white rounded-t-3xl md:rounded-3xl w-full max-w-md p-6">
+                    <div className="flex items-center gap-4 mb-6">
+                      <img src={user.picture} alt="" className="w-16 h-16 rounded-full" />
+                      <div>
+                        <p className="font-bold text-lg">{user.name}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                      </div>
+                    </div>
+                    
+                    <button onClick={() => { setUser(null); setShowMenu(false); }} className="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white p-4 rounded-2xl font-bold hover:from-red-600 hover:to-pink-700 transition mb-3">
+                      Cerrar Sesión
+                    </button>
+                    
+                    <button onClick={() => setShowMenu(false)} className="w-full bg-gray-100 text-gray-700 p-4 rounded-2xl font-bold hover:bg-gray-200 transition">
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
         };
 
+        // Render App
         ReactDOM.render(<App />, document.getElementById('root'));
+
+        // Initialize Lucide Icons
+        setTimeout(() => lucide.createIcons(), 100);
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('✅ Service Worker registered'))
+                    .catch(err => console.log('❌ SW error:', err));
+            });
+        }
+
+        // Install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💾 App can be installed');
+        });
     </script>
 </body>
 </html>
