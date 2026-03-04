@@ -1,6 +1,6 @@
 // Service Worker for AI English Academy PWA
 // Cache version
-const CACHE_NAME = 'ai-english-academy-v1';
+const CACHE_NAME = 'ai-english-academy-v1v2
 const CACHE_ASSETS = [
   './',
   './index.html',
