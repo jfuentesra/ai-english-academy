@@ -6,7 +6,7 @@
 
 **La mejor aplicación GRATIS para aprender inglés americano con Inteligencia Artificial**
 
-🚀 **[VER DEMO EN VIVO](https://tu-usuario.github.io/ai-english-academy)**
+🚀 **[VER DEMO EN VIVO](https://jfuentesra.github.io/ai-english-academy)**
 
 ![AI English Academy](https://via.placeholder.com/1200x600/4F46E5/FFFFFF?text=AI+English+Academy)
 
@@ -69,7 +69,7 @@ Interfaz premium con gradientes, animaciones y glassmorphism
 ### 📱 **En Android (Chrome)**
 
 1. Abre Chrome en tu móvil
-2. Ve a: `https://tu-usuario.github.io/ai-english-academy`
+2. Ve a: `https://jfuentesra.github.io/ai-english-academy`
 3. Toca el menú (⋮) → **"Agregar a pantalla de inicio"**
 4. Toca **"Instalar"** o **"Agregar"**
 5. ¡Listo! Ya tienes la app en tu móvil 🎉
@@ -77,7 +77,7 @@ Interfaz premium con gradientes, animaciones y glassmorphism
 ### 📱 **En iPhone/iPad (Safari)**
 
 1. Abre **Safari** (debe ser Safari, no Chrome)
-2. Ve a: `https://tu-usuario.github.io/ai-english-academy`
+2. Ve a: `https://jfuentesra.github.io/ai-english-academy`
 3. Toca el botón **Compartir** (📤)
 4. Desplázate y toca **"Agregar a pantalla de inicio"**
 5. Toca **"Agregar"**
@@ -151,7 +151,7 @@ Y más...
 ### Opción 1: Directo desde el navegador
 ```bash
 # Descarga el proyecto
-git clone https://github.com/tu-usuario/ai-english-academy.git
+git clone https://github.com/jfuentesra/ai-english-academy.git
 
 # Entra a la carpeta
 cd ai-english-academy
@@ -188,7 +188,7 @@ git init
 git add .
 git commit -m "Initial commit - AI English Academy"
 git branch -M main
-git remote add origin https://github.com/tu-usuario/ai-english-academy.git
+git remote add origin https://github.com/jfuentesra/ai-english-academy.git
 git push -u origin main
 ```
 
@@ -198,7 +198,7 @@ git push -u origin main
 3. En **Source** selecciona: `main` branch
 4. Click en **Save**
 5. Espera 1-2 minutos
-6. Tu app estará en: `https://tu-usuario.github.io/ai-english-academy`
+6. Tu app estará en: `https://jfuentesra.github.io/ai-english-academy`
 
 ---
 
@@ -284,9 +284,9 @@ Creado para estudiantes de inglés de habla hispana que buscan una alternativa g
 
 ## 📧 Contacto
 
-- **Repositorio:** [github.com/tu-usuario/ai-english-academy](https://github.com/tu-usuario/ai-english-academy)
-- **Issues:** [github.com/tu-usuario/ai-english-academy/issues](https://github.com/tu-usuario/ai-english-academy/issues)
-- **Discusiones:** [github.com/tu-usuario/ai-english-academy/discussions](https://github.com/tu-usuario/ai-english-academy/discussions)
+- **Repositorio:** [github.com/jfuentesra/ai-english-academy](https://github.com/jfuentesra/ai-english-academy)
+- **Issues:** [github.com/jfuentesra/ai-english-academy/issues](https://github.com/jfuentesra/ai-english-academy/issues)
+- **Discusiones:** [github.com/jfuentesra/ai-english-academy/discussions](https://github.com/jfuentesra/ai-english-academy/discussions)
 
 ---
 
@@ -349,7 +349,7 @@ Si te gusta este proyecto:
 
 ### 🎉 **¡Empieza a aprender inglés GRATIS hoy mismo!** 🎉
 
-**[🚀 ABRIR APLICACIÓN](https://tu-usuario.github.io/ai-english-academy)**
+**[🚀 ABRIR APLICACIÓN](https://jfuentesra.github.io/ai-english-academy)**
 
 ---
 
