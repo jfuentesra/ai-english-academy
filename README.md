@@ -1,427 +1,378 @@
-# 🎓 AI English Academy
+# 🧠 AI English Academy
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![PWA](https://img.shields.io/badge/PWA-enabled-brightgreen.svg)](https://web.dev/progressive-web-apps/)
-[![React](https://img.shields.io/badge/React-18-61DAFB.svg)](https://reactjs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PWA](https://img.shields.io/badge/PWA-Enabled-brightgreen.svg)](https://web.dev/progressive-web-apps/)
+[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
+[![Open Source](https://img.shields.io/badge/Open-Source-green.svg)](https://github.com/jfuentesra/ai-english-academy)
 
-**La mejor aplicación GRATIS para aprender inglés americano con Inteligencia Artificial**
+**The #1 FREE app to learn American English with AI-powered conversations, 60+ lessons, idioms, voice recognition, and gamification.**
 
-🚀 **[VER DEMO EN VIVO](https://jfuentesra.github.io/ai-english-academy)**
-
-![AI English Academy](https://via.placeholder.com/1200x600/4F46E5/FFFFFF?text=AI+English+Academy)
+🚀 **[LIVE DEMO](https://jfuentesra.github.io/ai-english-academy)** | 📱 **[Install as App](#-installation)** | 💬 **[AI Conversations](#-ai-powered-conversations)**
 
 ---
 
-## ✨ Características
+## ✨ Features
 
-### 🤖 **IA Conversacional Ilimitada**
-Practica conversaciones reales con Claude AI. Sin límites, sin restricciones.
+### 🤖 **Unlimited AI Conversations**
+Practice real English conversations with Claude AI. No limits, no restrictions. Get corrected naturally as you speak.
 
-### 📚 **60+ Lecciones Curadas**
-Desde nivel A1 (Principiante) hasta C2 (Maestría)
+### 📚 **60+ Curated Lessons**
+Progressive curriculum from A1 (Beginner) to C2 (Mastery)
+- Grammar foundations
+- Practical vocabulary
+- Common expressions
+- Business English
 
-### 🇺🇸 **20+ Modismos Americanos**
-Aprende expresiones que realmente usan los nativos
+### 🇺🇸 **20+ American Idioms**
+Learn expressions native speakers actually use
+- "Break a leg" (Good luck)
+- "Piece of cake" (Very easy)
+- "Under the weather" (Feeling sick)
+- "Spill the beans" (Reveal a secret)
 
-### 🎤 **Reconocimiento de Voz**
-Practica tu pronunciación con feedback instantáneo
+### 🎤 **Voice Recognition**
+Practice pronunciation with instant feedback using Web Speech API.
 
-### 🔊 **Audio Nativo Americano**
-Escucha cada frase pronunciada por voz nativa
+### 🔊 **Native American Audio**
+Every phrase pronounced by native speakers.
 
-### 🏆 **Gamificación Completa**
-- Sistema de puntos y XP
-- Rachas diarias
-- Insignias desbloqueables
-- Seguimiento de progreso
+### 🏆 **Complete Gamification**
+- Points & XP system
+- Daily streaks
+- Unlockable badges
+- Progress tracking
+- Leaderboards
 
 ### 📱 **Progressive Web App (PWA)**
-Instálala como app nativa en Android e iOS
+Install as a native app on Android, iOS, and desktop.
+- Works offline
+- No app store needed
+- Instant updates
+- Zero installation bloat
 
-### 💾 **Progreso Guardado**
-Tu avance se sincroniza automáticamente
+### 💾 **Progress Saved Automatically**
+Your learning data syncs instantly across devices.
 
-### 🎨 **Diseño Moderno**
-Interfaz premium con gradientes, animaciones y glassmorphism
+### 🎨 **Modern Design**
+Premium interface with gradients, animations, and glassmorphism effects.
+
+### 🔐 **Privacy First**
+All data stored locally. No tracking. No ads. No accounts required.
 
 ---
 
-## 📊 Comparación con la Competencia
+## 📊 Why Choose AI English Academy?
 
-| Característica | AI English Academy | Duolingo Max | Babbel | Open English |
-|----------------|-------------------|--------------|--------|--------------|
-| **💰 Precio** | **$0 GRATIS** | $360/año | $144/año | $900/año |
-| **🤖 IA Conversacional** | ✅ Ilimitada | Solo en Max | ❌ | ❌ |
-| **📚 Lecciones** | 60+ | 100+ | 50+ | Limitadas |
-| **🇺🇸 Modismos USA** | ✅ 20+ | Básicos | Limitados | Algunos |
-| **🎤 Reconocimiento Voz** | ✅ | ✅ | ✅ | ✅ |
-| **💾 Progreso Guardado** | ✅ | ✅ | ✅ | ✅ |
-| **📱 PWA Móvil** | ✅ | ❌ | ❌ | ❌ |
+| Feature | AI English | Duolingo Max | Babbel | Open English |
+|---------|-----------|-------------|--------|---------------|
+| **💰 Cost** | **FREE** | $360/year | $144/year | $900/year |
+| **🤖 AI Chat** | ✅ Unlimited | Max only | ❌ | ❌ |
+| **📚 Lessons** | 60+ | 100+ | 50+ | Limited |
+| **🇺🇸 Idioms** | ✅ 20+ | Basic | Limited | Some |
+| **🎤 Voice Recognition** | ✅ | ✅ | ✅ | ✅ |
+| **💾 Auto Save** | ✅ | ✅ | ✅ | ✅ |
+| **📱 PWA/Mobile** | ✅ | ❌ | ❌ | ❌ |
 | **💻 Open Source** | ✅ | ❌ | ❌ | ❌ |
-| **🆓 Sin Anuncios** | ✅ | Solo Max | ❌ | ❌ |
+| **🆓 No Ads** | ✅ | Max only | ❌ | ❌ |
 
-### 💰 **AHORRA $360/AÑO** vs Duolingo Max
-
----
-
-## 🚀 Instalación Rápida
-
-### 📱 **En Android (Chrome)**
-
-1. Abre Chrome en tu móvil
-2. Ve a: `https://jfuentesra.github.io/ai-english-academy`
-3. Toca el menú (⋮) → **"Agregar a pantalla de inicio"**
-4. Toca **"Instalar"** o **"Agregar"**
-5. ¡Listo! Ya tienes la app en tu móvil 🎉
-
-### 📱 **En iPhone/iPad (Safari)**
-
-1. Abre **Safari** (debe ser Safari, no Chrome)
-2. Ve a: `https://jfuentesra.github.io/ai-english-academy`
-3. Toca el botón **Compartir** (📤)
-4. Desplázate y toca **"Agregar a pantalla de inicio"**
-5. Toca **"Agregar"**
-6. ¡Listo! 🎉
-
-### 💻 **En Computadora**
-
-1. Descarga o clona este repositorio
-2. Abre el archivo `index.html` en tu navegador
-3. ¡Funciona inmediatamente!
+### 💰 **SAVE $360/YEAR vs Duolingo Max**
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## 🚀 Quick Installation
 
-- **React 18** - Framework de interfaz
-- **Tailwind CSS** - Estilos modernos y responsive
-- **Claude AI API** - Conversaciones inteligentes
-- **Web Speech API** - Reconocimiento y síntesis de voz
-- **Service Workers** - Funcionamiento offline (PWA)
-- **LocalStorage** - Persistencia de datos
-- **Lucide Icons** - Iconos modernos
+### 📱 **Android (Chrome)**
+
+1. Open Chrome on your phone
+2. Visit: `https://jfuentesra.github.io/ai-english-academy`
+3. Tap menu (⋮) → **"Add to Home Screen"**
+4. Tap **"Install"** → Done!
+
+### 📱 **iPhone/iPad (Safari)**
+
+1. Open **Safari** (must be Safari, not Chrome)
+2. Visit: `https://jfuentesra.github.io/ai-english-academy`
+3. Tap share button (📤)
+4. Scroll and tap **"Add to Home Screen"**
+5. Tap **"Add"** → Done!
+
+### 💻 **Desktop/Web**
+
+1. Clone or download this repo
+2. Open `index.html` in your browser
+3. Works instantly - no build process needed!
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🛠️ Technologies Used
+
+- **React 18** - UI Framework
+- **Tailwind CSS** - Modern styling
+- **Claude AI API** - Smart conversations
+- **Web Speech API** - Voice recognition & synthesis
+- **Service Workers** - Offline functionality (PWA)
+- **LocalStorage** - Data persistence
+- **Lucide Icons** - Beautiful icons
+
+---
+
+## 📁 Project Structure
+
 ```
 ai-english-academy/
-├── index.html          # Aplicación principal (React + HTML)
-├── manifest.json       # Configuración PWA
-├── sw.js              # Service Worker (cache y offline)
-├── README.md          # Documentación
-└── LICENSE            # Licencia MIT
+├── index.html        # Main React app (single file!)
+├── manifest.json     # PWA configuration
+├── sw.js             # Service Worker (offline)
+├── README.md         # This file
+└── LICENSE           # MIT License
 ```
 
 ---
 
-## 🎯 Niveles de Aprendizaje
+## 🎯 Learning Levels
 
-| Nivel | Nombre | Descripción | Lecciones |
-|-------|--------|-------------|-----------|
-| **A1** | 🌱 Principiante | Saludos, números, colores, familia | 10 |
-| **A2** | 📘 Básico | Compras, restaurantes, transporte | 5 |
-| **B1** | 🎯 Intermedio | Opiniones, experiencias, cultura | 3 |
-| **B2** | 🚀 Intermedio Alto | Negocios, debates, slang | - |
-| **C1** | 👑 Avanzado | Fluidez avanzada, idioms complejos | - |
-| **C2** | 💎 Maestría | Dominio completo, nativo | - |
-
----
-
-## 🗣️ Modismos Americanos Incluidos
-
-### A2 (Básico)
-- "Break a leg" - Buena suerte
-- "Piece of cake" - Muy fácil
-- "Hit the sack" - Ir a dormir
-- "Couch potato" - Persona perezosa
-
-### B1 (Intermedio)
-- "Under the weather" - Sentirse mal
-- "Spill the beans" - Revelar un secreto
-- "Break the ice" - Romper el hielo
-- "Cost an arm and a leg" - Muy caro
-
-Y más...
+| Level | Name | Description | Topics |
+|-------|------|-------------|--------|
+| **A1** | 🌱 Beginner | Hello, numbers, colors, family | 10+ lessons |
+| **A2** | 📘 Elementary | Shopping, restaurants, travel | 5+ lessons |
+| **B1** | 🎯 Intermediate | Opinions, experiences, culture | 3+ lessons |
+| **B2** | 🚀 Upper-Intermediate | Business, debates, slang | In development |
+| **C1** | 👑 Advanced | Fluency, complex idioms | In development |
+| **C2** | 💎 Mastery | Complete fluency | In development |
 
 ---
 
-## 💻 Uso Local
+## 🗣️ Sample Idioms
 
-### Opción 1: Directo desde el navegador
+### A2 Level
+- "Break a leg" = Good luck
+- "Piece of cake" = Very easy
+- "Hit the sack" = Go to bed
+- "Couch potato" = Lazy person
+
+### B1 Level
+- "Under the weather" = Feel sick
+- "Spill the beans" = Reveal a secret
+- "Break the ice" = Start conversation
+- "Cost an arm and a leg" = Very expensive
+
+### B2+ Level
+- "Barking up the wrong tree" = Wrong approach
+- "Ballpark figure" = Rough estimate
+- "Beat around the bush" = Avoid main point
+- "Bite the bullet" = Accept difficulty
+
+---
+
+## 💻 Local Development
+
+### Option 1: Direct Browser Open
+
 ```bash
-# Descarga el proyecto
+# Clone the repo
 git clone https://github.com/jfuentesra/ai-english-academy.git
 
-# Entra a la carpeta
+# Enter directory
 cd ai-english-academy
 
-# Abre index.html en tu navegador
-# En Mac:
+# On Mac:
 open index.html
 
-# En Windows:
+# On Windows:
 start index.html
 
-# En Linux:
+# On Linux:
 xdg-open index.html
 ```
 
-### Opción 2: Con servidor local
+### Option 2: Local Server
+
 ```bash
 # Python 3
 python -m http.server 8000
 
-# Node.js (con http-server)
+# Node.js (requires http-server)
 npx http-server
 
-# Luego abre: http://localhost:8000
+# Then open: http://localhost:8000
 ```
 
 ---
 
-## 🌐 Deploy en GitHub Pages
+## 🌐 Deploy to GitHub Pages
 
-### Paso 1: Sube a GitHub
+### Step 1: Push to GitHub
+
 ```bash
 git init
 git add .
 git commit -m "Initial commit - AI English Academy"
 git branch -M main
-git remote add origin https://github.com/jfuentesra/ai-english-academy.git
+git remote add origin https://github.com/YOUR_USERNAME/ai-english-academy.git
 git push -u origin main
 ```
 
-### Paso 2: Activa GitHub Pages
-1. Ve a tu repositorio en GitHub
-2. Click en **Settings** → **Pages**
-3. En **Source** selecciona: `main` branch
-4. Click en **Save**
-5. Espera 1-2 minutos
-6. Tu app estará en: `https://jfuentesra.github.io/ai-english-academy`
+### Step 2: Enable GitHub Pages
+
+1. Go to your repo → **Settings** → **Pages**
+2. Source: Select `main` branch
+3. Click **Save**
+4. Wait 1-2 minutes
+5. Your app is live at: `https://YOUR_USERNAME.github.io/ai-english-academy`
 
 ---
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-¡Las contribuciones son bienvenidas! 
+Contributions are welcome! Here's how:
 
-### Cómo contribuir:
+1. **Fork** the project
+2. Create a feature branch: `git checkout -b feature/YourFeature`
+3. Commit: `git commit -m 'Add YourFeature'`
+4. Push: `git push origin feature/YourFeature`
+5. Open a **Pull Request**
 
-1. **Fork** el proyecto
-2. Crea tu rama de feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un **Pull Request**
-
-### Ideas para contribuir:
-- [ ] Agregar más lecciones
-- [ ] Traducir a otros idiomas
-- [ ] Mejorar el diseño
-- [ ] Agregar más modismos
-- [ ] Crear ejercicios interactivos
-- [ ] Integrar más APIs
-- [ ] Mejorar la documentación
-- [ ] Corregir bugs
+### Ideas to Contribute:
+- [ ] Add more lessons (B2, C1, C2 levels)
+- [ ] Translate to other languages
+- [ ] Improve UI/UX design
+- [ ] Add writing exercises
+- [ ] Create interactive dialogue challenges
+- [ ] Add listening comprehension exercises
+- [ ] Improve accessibility
+- [ ] Fix bugs and performance issues
 
 ---
 
-## 🐛 Reportar Bugs
+## 🐛 Bug Reports
 
-Si encuentras un bug, por favor:
-
-1. Abre un **Issue** en GitHub
-2. Describe el problema detalladamente
-3. Incluye capturas de pantalla si es posible
-4. Menciona tu navegador y sistema operativo
-
----
-
-## 📝 Licencia
-
-Este proyecto está bajo la **Licencia MIT**.
-```
-MIT License
-
-Copyright (c) 2026 AI English Academy
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
-Ver archivo [LICENSE](LICENSE) para más detalles.
+Found a bug? Please open an [Issue](https://github.com/jfuentesra/ai-english-academy/issues) with:
+- Clear description
+- Steps to reproduce
+- Screenshots (if applicable)
+- Browser & OS info
 
 ---
 
-## 💖 Créditos
+## 📝 License
 
-### Tecnología
-- **[Anthropic Claude AI](https://anthropic.com)** - Motor de IA conversacional
-- **[React](https://reactjs.org/)** - Framework UI
-- **[Tailwind CSS](https://tailwindcss.com/)** - Framework CSS
-- **[Lucide Icons](https://lucide.dev/)** - Iconos
+MIT License - Free to use, modify, and distribute
 
-### Contenido Educativo
-- Lecciones curadas por expertos en ESL
-- Modismos recopilados de fuentes auténticas
-- Pronunciación basada en inglés americano estándar
-
-### Inspiración
-Creado para estudiantes de inglés de habla hispana que buscan una alternativa gratuita y de calidad a las apps comerciales.
+See [LICENSE](LICENSE) file for details.
 
 ---
 
-## 📧 Contacto
+## 💖 Credits
 
-- **Repositorio:** [github.com/jfuentesra/ai-english-academy](https://github.com/jfuentesra/ai-english-academy)
-- **Issues:** [github.com/jfuentesra/ai-english-academy/issues](https://github.com/jfuentesra/ai-english-academy/issues)
-- **Discusiones:** [github.com/jfuentesra/ai-english-academy/discussions](https://github.com/jfuentesra/ai-english-academy/discussions)
+### Technology Stack
+- [Anthropic Claude AI](https://anthropic.com/) - Conversational AI
+- [React](https://react.dev/) - UI Framework
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Lucide Icons](https://lucide.dev/) - Icons
+
+### Educational Content
+- ESL expert-curated lessons
+- Authentic American idioms
+- Standard American English pronunciation
+
+### Inspiration
+Created for Spanish-speaking students seeking a quality, free alternative to commercial language apps.
 
 ---
 
-## 🌟 Apóyanos
+## 📧 Contact & Support
 
-Si te gusta este proyecto:
+- **GitHub Issues**: [Report bugs & request features](https://github.com/jfuentesra/ai-english-academy/issues)
+- **Discussions**: [Ask questions & share ideas](https://github.com/jfuentesra/ai-english-academy/discussions)
+- **Repository**: [github.com/jfuentesra/ai-english-academy](https://github.com/jfuentesra/ai-english-academy)
 
-⭐ **Dale una estrella en GitHub**  
-🔀 **Compártelo con amigos**  
-🐛 **Reporta bugs**  
-💡 **Sugiere mejoras**  
-🤝 **Contribuye con código**
+---
+
+## 🌟 Show Your Support
+
+If you find this useful:
+
+⭐ **Star this repo**
+🔀 **Share with friends**
+🐛 **Report bugs**
+💡 **Suggest improvements**
+🤝 **Contribute code**
 
 ---
 
 ## 📈 Roadmap
 
-### ✅ Versión 1.0 (Actual)
-- [x] 60+ lecciones
-- [x] IA conversacional
-- [x] Reconocimiento de voz
-- [x] 20+ modismos
-- [x] PWA funcional
-- [x] Gamificación básica
+### ✅ Version 1.0 (Current)
+- ✅ 60+ lessons (A1-B1)
+- ✅ AI conversations
+- ✅ Voice recognition
+- ✅ 20+ idioms
+- ✅ PWA support
+- ✅ Gamification
+- ✅ Open source
 
-### 🚧 Versión 2.0 (Próximamente)
-- [ ] 200+ lecciones
-- [ ] Certificados descargables
-- [ ] Modo oscuro
-- [ ] Más idiomas de interfaz
-- [ ] Comunidad de usuarios
-- [ ] Competencias entre usuarios
-- [ ] Integración con Anki
-- [ ] App móvil nativa
+### 🚧 Version 2.0 (Coming Soon)
+- [ ] 200+ lessons
+- [ ] Downloadable certificates
+- [ ] Dark mode
+- [ ] More interface languages
+- [ ] User community
+- [ ] Competitive challenges
+- [ ] Anki integration
+- [ ] Native mobile apps
 
-### 🔮 Versión 3.0 (Futuro)
-- [ ] Tutores humanos voluntarios
-- [ ] Videollamadas de práctica
-- [ ] Cursos especializados (negocios, medicina, etc.)
-- [ ] Reconocimiento de escritura a mano
-- [ ] Realidad aumentada
+### 🔮 Version 3.0 (Future)
+- [ ] Human volunteer tutors
+- [ ] Practice video calls
+- [ ] Specialized courses (Business, Medical, etc.)
+- [ ] Handwriting recognition
+- [ ] Augmented reality
 
 ---
 
-## 📚 Recursos Adicionales
+## 📚 Additional Resources
 
-### Para Aprender Más
-- [MDN Web Docs - PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
+### Learn More About:
+- [MDN: Progressive Web Apps](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
 - [React Documentation](https://react.dev/)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+- [American English Idioms](https://www.britannica.com/)
 
-### Comunidades
-- [r/EnglishLearning](https://reddit.com/r/EnglishLearning) - Reddit
-- [Discord de Aprendizaje de Inglés](https://discord.gg/english)
-
----
-
-<div align="center">
-
-### 🎉 **¡Empieza a aprender inglés GRATIS hoy mismo!** 🎉
-
-**[🚀 ABRIR APLICACIÓN](https://jfuentesra.github.io/ai-english-academy)**
+### Communities
+- [r/EnglishLearning](https://reddit.com/r/EnglishLearning) - Reddit community
+- [English Learning Discord](https://discord.gg/english) - Chat with learners
+- [Speaky](https://speaky.com/) - Language exchange
 
 ---
 
-**Hecho con ❤️ para estudiantes de inglés en todo el mundo**
+## 🎉 **Start Learning Today!**
 
-⭐ **¡No olvides dar una estrella en GitHub!** ⭐
+### **[🚀 OPEN APP NOW](https://jfuentesra.github.io/ai-english-academy)**
 
-</div>
-```
+**Learn American English, completely free, completely online, with AI.**
 
----
-
-## **📄 ARCHIVO 5: `LICENSE`**
-
-**Copia TODO esto:**
-```
-MIT License
-
-Copyright (c) 2026 AI English Academy Contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+Made with ❤️ for English learners worldwide
 
 ---
 
-## **📄 ARCHIVO 6: `.gitignore`**
+## 📖 BONUS: Spanish Guide / Guía en Español
 
-**Copia TODO esto:**
-```
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+### ¿Por qué elegir AI English Academy?
 
-# Dependencies
-node_modules/
+- **100% Gratis** - Sin suscripciones
+- **Inteligencia Artificial** - Conversaciones ilimitadas con Claude AI
+- **Sin límites** - Aprende a tu ritmo
+- **Offline** - Funciona sin internet
+- **Privacidad** - Tus datos en tu dispositivo
+- **PWA** - Instálate como una app nativa
 
-# Production
-build/
-dist/
+### Cómo comenzar:
 
-# Misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+1. Abre https://jfuentesra.github.io/ai-english-academy
+2. Presiona en tu teléfono: Menú (⋮) → Agregar a pantalla de inicio
+3. ¡Empieza a aprender!
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+**¡Aprende inglés gratis desde hoy!**
 
-# OS
-Thumbs.db
+⭐ No olvides dar una estrella en GitHub ⭐
