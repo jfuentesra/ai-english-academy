@@ -1,6 +1,6 @@
 // Service Worker for AI English Academy PWA
 // Cache version
-const CACHE_NAME = 'ai-english-academy';
+const CACHE_NAME = 'ai-english-academy-v2';
 const CACHE_ASSETS = [
   './',
   './index.html',
@@ -9,7 +9,7 @@ const CACHE_ASSETS = [
   'https://unpkg.com/react@18/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
   'https://unpkg.com/@babel/standalone/babel.min.js',
-  'https://unpkg.com/@lucide/lab@0.1.112/dist/index.umd.js'
+  'https://cdn.jsdelivr.net/npm/lucide-react@0.484.0/dist/umd/lucide-react.min.js'
 ];
 
 // Install Service Worker
