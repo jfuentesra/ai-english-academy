@@ -9,7 +9,7 @@ const CACHE_ASSETS = [
   'https://unpkg.com/react@18/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
   'https://unpkg.com/@babel/standalone/babel.min.js',
-  'https://unpkg.com/lucide@latest/dist/umd/lucide.min.js'
+  'https://unpkg.com/@lucide/lab@0.1.112/dist/index.umd.js'
 ];
 
 // Install Service Worker
